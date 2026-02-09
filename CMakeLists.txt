@@ -119,3 +119,9 @@ install(TARGETS ${PROJECT_NAME}
     LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
     RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
 )
+
+# --- Tools ---
+option(BUILD_TOOLS "Build auxiliary tools (VspServer, etc.)" ON)
+if(BUILD_TOOLS)
+    add_subdirectory(tool/vsp_server)
+endif()
