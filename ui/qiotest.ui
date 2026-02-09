@@ -1,0 +1,791 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>QIoTestClass</class>
+ <widget class="QMainWindow" name="QIoTestClass">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>1234</width>
+    <height>810</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>QIoTest</string>
+  </property>
+  <widget class="QWidget" name="centralWidget">
+   <layout class="QGridLayout" name="gridLayout_11">
+    <item row="0" column="0">
+     <layout class="QVBoxLayout" name="verticalLayout_4"/>
+    </item>
+    <item row="1" column="1">
+     <layout class="QGridLayout" name="gridLayout">
+      <item row="0" column="0">
+       <widget class="QGroupBox" name="groupBox">
+        <property name="font">
+         <font>
+          <pointsize>12</pointsize>
+         </font>
+        </property>
+        <property name="styleSheet">
+         <string notr="true">color: rgb(0, 0, 255);</string>
+        </property>
+        <property name="title">
+         <string>窗口功能区</string>
+        </property>
+        <layout class="QGridLayout" name="gridLayout_10">
+         <item row="0" column="0">
+          <layout class="QGridLayout" name="gridLayout_18" rowstretch="0,0">
+           <item row="1" column="0">
+            <layout class="QGridLayout" name="gridLayout_14" columnstretch="7,3">
+             <item row="0" column="0">
+              <widget class="QGroupBox" name="groupBox_2">
+               <property name="font">
+                <font>
+                 <pointsize>12</pointsize>
+                </font>
+               </property>
+               <property name="title">
+                <string>测试窗口</string>
+               </property>
+               <layout class="QGridLayout" name="gridLayout_19">
+                <item row="0" column="0">
+                 <layout class="QGridLayout" name="gridLayout_16" rowstretch="4,6">
+                  <item row="0" column="0">
+                   <layout class="QGridLayout" name="gridLayout_8">
+                    <item row="0" column="0">
+                     <layout class="QHBoxLayout" name="horizontalLayout_6">
+                      <item>
+                       <layout class="QVBoxLayout" name="verticalLayout_2" stretch="3,1">
+                        <item>
+                         <widget class="QGroupBox" name="groupBox_4">
+                          <property name="styleSheet">
+                           <string notr="true">color: rgb(0, 0, 255);</string>
+                          </property>
+                          <property name="title">
+                           <string>ok/ng</string>
+                          </property>
+                          <layout class="QGridLayout" name="gridLayout_4">
+                           <item row="0" column="0">
+                            <widget class="QLabel" name="labelResult">
+                             <property name="frameShape">
+                              <enum>QFrame::Panel</enum>
+                             </property>
+                             <property name="text">
+                              <string/>
+                             </property>
+                            </widget>
+                           </item>
+                          </layout>
+                         </widget>
+                        </item>
+                        <item>
+                         <layout class="QHBoxLayout" name="horizontalLayout_4">
+                          <item>
+                           <widget class="QPushButton" name="pushButtonStart">
+                            <property name="sizePolicy">
+                             <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
+                              <horstretch>0</horstretch>
+                              <verstretch>0</verstretch>
+                             </sizepolicy>
+                            </property>
+                            <property name="font">
+                             <font>
+                              <pointsize>14</pointsize>
+                             </font>
+                            </property>
+                            <property name="text">
+                             <string>开始</string>
+                            </property>
+                            <property name="autoDefault">
+                             <bool>false</bool>
+                            </property>
+                            <property name="flat">
+                             <bool>false</bool>
+                            </property>
+                           </widget>
+                          </item>
+                          <item>
+                           <widget class="QPushButton" name="pushButtonPause">
+                            <property name="enabled">
+                             <bool>false</bool>
+                            </property>
+                            <property name="text">
+                             <string>暂停</string>
+                            </property>
+                            <property name="autoDefault">
+                             <bool>false</bool>
+                            </property>
+                            <property name="flat">
+                             <bool>false</bool>
+                            </property>
+                           </widget>
+                          </item>
+                          <item>
+                           <widget class="QPushButton" name="pushButtonExit">
+                            <property name="font">
+                             <font>
+                              <pointsize>14</pointsize>
+                             </font>
+                            </property>
+                            <property name="text">
+                             <string>退出测</string>
+                            </property>
+                            <property name="autoDefault">
+                             <bool>false</bool>
+                            </property>
+                            <property name="flat">
+                             <bool>false</bool>
+                            </property>
+                           </widget>
+                          </item>
+                          <item>
+                           <widget class="QPushButton" name="pushButtonStepTest">
+                            <property name="enabled">
+                             <bool>true</bool>
+                            </property>
+                            <property name="font">
+                             <font>
+                              <pointsize>14</pointsize>
+                             </font>
+                            </property>
+                            <property name="text">
+                             <string>单步测</string>
+                            </property>
+                            <property name="autoDefault">
+                             <bool>false</bool>
+                            </property>
+                            <property name="flat">
+                             <bool>false</bool>
+                            </property>
+                           </widget>
+                          </item>
+                         </layout>
+                        </item>
+                       </layout>
+                      </item>
+                      <item>
+                       <layout class="QVBoxLayout" name="verticalLayout">
+                        <item>
+                         <widget class="QGroupBox" name="groupBox_5">
+                          <property name="styleSheet">
+                           <string notr="true">color: rgb(0, 0, 255);</string>
+                          </property>
+                          <property name="title">
+                           <string>坐标</string>
+                          </property>
+                          <layout class="QGridLayout" name="gridLayout_6">
+                           <item row="0" column="0">
+                            <layout class="QHBoxLayout" name="horizontalLayout_2">
+                             <item>
+                              <widget class="QLabel" name="labelCoordinateL">
+                               <property name="font">
+                                <font>
+                                 <pointsize>14</pointsize>
+                                </font>
+                               </property>
+                               <property name="frameShape">
+                                <enum>QFrame::Box</enum>
+                               </property>
+                               <property name="text">
+                                <string/>
+                               </property>
+                              </widget>
+                             </item>
+                             <item>
+                              <widget class="QLabel" name="label_7">
+                               <property name="text">
+                                <string/>
+                               </property>
+                               <property name="pixmap">
+                                <pixmap resource="../resources/qiotest.qrc">:/QIoTest/Arrow.png</pixmap>
+                               </property>
+                              </widget>
+                             </item>
+                             <item>
+                              <widget class="QLabel" name="labelCoordinateR">
+                               <property name="font">
+                                <font>
+                                 <pointsize>14</pointsize>
+                                </font>
+                               </property>
+                               <property name="frameShape">
+                                <enum>QFrame::Box</enum>
+                               </property>
+                               <property name="text">
+                                <string/>
+                               </property>
+                              </widget>
+                             </item>
+                            </layout>
+                           </item>
+                          </layout>
+                         </widget>
+                        </item>
+                        <item>
+                         <widget class="QGroupBox" name="groupBox_6">
+                          <property name="styleSheet">
+                           <string notr="true">color: rgb(0, 0, 255);</string>
+                          </property>
+                          <property name="title">
+                           <string>针点</string>
+                          </property>
+                          <layout class="QGridLayout" name="gridLayout_7">
+                           <item row="0" column="0">
+                            <layout class="QHBoxLayout" name="horizontalLayout_3">
+                             <item>
+                              <widget class="QLabel" name="labelPinL">
+                               <property name="font">
+                                <font>
+                                 <pointsize>14</pointsize>
+                                </font>
+                               </property>
+                               <property name="frameShape">
+                                <enum>QFrame::Box</enum>
+                               </property>
+                               <property name="text">
+                                <string/>
+                               </property>
+                              </widget>
+                             </item>
+                             <item>
+                              <spacer name="horizontalSpacer">
+                               <property name="orientation">
+                                <enum>Qt::Horizontal</enum>
+                               </property>
+                               <property name="sizeType">
+                                <enum>QSizePolicy::Fixed</enum>
+                               </property>
+                               <property name="sizeHint" stdset="0">
+                                <size>
+                                 <width>40</width>
+                                 <height>20</height>
+                                </size>
+                               </property>
+                              </spacer>
+                             </item>
+                             <item>
+                              <widget class="QLabel" name="labelPinR">
+                               <property name="font">
+                                <font>
+                                 <pointsize>14</pointsize>
+                                </font>
+                               </property>
+                               <property name="frameShape">
+                                <enum>QFrame::Box</enum>
+                               </property>
+                               <property name="text">
+                                <string/>
+                               </property>
+                              </widget>
+                             </item>
+                            </layout>
+                           </item>
+                          </layout>
+                         </widget>
+                        </item>
+                        <item>
+                         <widget class="QGroupBox" name="groupBox_7">
+                          <property name="styleSheet">
+                           <string notr="true">color: rgb(0, 0, 255);</string>
+                          </property>
+                          <property name="title">
+                           <string>图号</string>
+                          </property>
+                          <layout class="QGridLayout" name="gridLayout_5">
+                           <item row="0" column="0">
+                            <widget class="QLabel" name="labelCategory">
+                             <property name="font">
+                              <font>
+                               <pointsize>14</pointsize>
+                              </font>
+                             </property>
+                             <property name="frameShape">
+                              <enum>QFrame::Box</enum>
+                             </property>
+                             <property name="text">
+                              <string/>
+                             </property>
+                            </widget>
+                           </item>
+                          </layout>
+                         </widget>
+                        </item>
+                       </layout>
+                      </item>
+                     </layout>
+                    </item>
+                    <item row="1" column="0">
+                     <layout class="QHBoxLayout" name="horizontalLayout_5">
+                      <item>
+                       <widget class="QLineEdit" name="lineEdit_coor">
+                        <property name="enabled">
+                         <bool>true</bool>
+                        </property>
+                        <property name="font">
+                         <font>
+                          <pointsize>14</pointsize>
+                         </font>
+                        </property>
+                        <property name="layoutDirection">
+                         <enum>Qt::LeftToRight</enum>
+                        </property>
+                        <property name="text">
+                         <string/>
+                        </property>
+                        <property name="alignment">
+                         <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+                        </property>
+                       </widget>
+                      </item>
+                      <item>
+                       <widget class="QPushButton" name="btn_find_coor">
+                        <property name="enabled">
+                         <bool>true</bool>
+                        </property>
+                        <property name="sizePolicy">
+                         <sizepolicy hsizetype="Minimum" vsizetype="Preferred">
+                          <horstretch>0</horstretch>
+                          <verstretch>0</verstretch>
+                         </sizepolicy>
+                        </property>
+                        <property name="font">
+                         <font>
+                          <pointsize>14</pointsize>
+                         </font>
+                        </property>
+                        <property name="text">
+                         <string>坐标查</string>
+                        </property>
+                       </widget>
+                      </item>
+                      <item>
+                       <widget class="QLineEdit" name="lineEdit_pin">
+                        <property name="enabled">
+                         <bool>true</bool>
+                        </property>
+                        <property name="font">
+                         <font>
+                          <pointsize>14</pointsize>
+                         </font>
+                        </property>
+                        <property name="alignment">
+                         <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+                        </property>
+                       </widget>
+                      </item>
+                      <item>
+                       <widget class="QPushButton" name="btn_find_pin">
+                        <property name="enabled">
+                         <bool>true</bool>
+                        </property>
+                        <property name="font">
+                         <font>
+                          <pointsize>14</pointsize>
+                         </font>
+                        </property>
+                        <property name="text">
+                         <string>针点查</string>
+                        </property>
+                       </widget>
+                      </item>
+                      <item>
+                       <widget class="QCheckBox" name="checkBox_short">
+                        <property name="text">
+                         <string>测试短路</string>
+                        </property>
+                       </widget>
+                      </item>
+                     </layout>
+                    </item>
+                   </layout>
+                  </item>
+                  <item row="1" column="0">
+                   <widget class="QTabWidget" name="tabWidget">
+                    <property name="font">
+                     <font>
+                      <pointsize>12</pointsize>
+                     </font>
+                    </property>
+                    <property name="styleSheet">
+                     <string notr="true">color: rgb(0, 0, 255);</string>
+                    </property>
+                    <property name="currentIndex">
+                     <number>0</number>
+                    </property>
+                    <widget class="QWidget" name="tab">
+                     <attribute name="title">
+                      <string>测试档案</string>
+                     </attribute>
+                     <layout class="QGridLayout" name="gridLayout_12">
+                      <item row="0" column="0">
+                       <widget class="QTableWidget" name="tableWidget">
+                        <property name="font">
+                         <font>
+                          <pointsize>12</pointsize>
+                         </font>
+                        </property>
+                        <property name="selectionBehavior">
+                         <enum>QAbstractItemView::SelectRows</enum>
+                        </property>
+                       </widget>
+                      </item>
+                     </layout>
+                    </widget>
+                    <widget class="QWidget" name="tab_2">
+                     <attribute name="title">
+                      <string>NG记录</string>
+                     </attribute>
+                     <layout class="QGridLayout" name="gridLayout_13">
+                      <item row="0" column="0">
+                       <widget class="QTableWidget" name="tableWidgetNg">
+                        <property name="font">
+                         <font>
+                          <pointsize>12</pointsize>
+                         </font>
+                        </property>
+                        <property name="selectionBehavior">
+                         <enum>QAbstractItemView::SelectRows</enum>
+                        </property>
+                       </widget>
+                      </item>
+                     </layout>
+                    </widget>
+                   </widget>
+                  </item>
+                 </layout>
+                </item>
+               </layout>
+              </widget>
+             </item>
+             <item row="0" column="1">
+              <layout class="QGridLayout" name="gridLayout_15">
+               <item row="1" column="0">
+                <layout class="QGridLayout" name="gridLayout_9">
+                 <item row="0" column="0">
+                  <widget class="QPushButton" name="pushButtonMoveUp">
+                   <property name="layoutDirection">
+                    <enum>Qt::LeftToRight</enum>
+                   </property>
+                   <property name="text">
+                    <string>/\ 
+|</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item row="0" column="1">
+                  <widget class="QPushButton" name="pushButtonMoveDown">
+                   <property name="layoutDirection">
+                    <enum>Qt::LeftToRight</enum>
+                   </property>
+                   <property name="text">
+                    <string>|
+\/</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item row="0" column="2">
+                  <widget class="QPushButton" name="pushButtonMoveUp_a">
+                   <property name="layoutDirection">
+                    <enum>Qt::LeftToRight</enum>
+                   </property>
+                   <property name="text">
+                    <string>/\
+||</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item row="0" column="3">
+                  <widget class="QPushButton" name="pushButtonMoveDown_a">
+                   <property name="layoutDirection">
+                    <enum>Qt::LeftToRight</enum>
+                   </property>
+                   <property name="text">
+                    <string>||
+\/</string>
+                   </property>
+                  </widget>
+                 </item>
+                </layout>
+               </item>
+               <item row="0" column="0">
+                <widget class="QGroupBox" name="groupBox_3">
+                 <property name="font">
+                  <font>
+                   <pointsize>12</pointsize>
+                  </font>
+                 </property>
+                 <property name="styleSheet">
+                  <string notr="true">color: rgb(0, 0, 255);</string>
+                 </property>
+                 <property name="title">
+                  <string>测试图号</string>
+                 </property>
+                 <layout class="QGridLayout" name="gridLayout_2">
+                  <item row="0" column="0">
+                   <widget class="QListWidget" name="listWidgetUp">
+                    <property name="font">
+                     <font>
+                      <pointsize>12</pointsize>
+                     </font>
+                    </property>
+                    <property name="styleSheet">
+                     <string notr="true">color: rgb(0, 85, 0);</string>
+                    </property>
+                   </widget>
+                  </item>
+                 </layout>
+                </widget>
+               </item>
+               <item row="2" column="0">
+                <widget class="QGroupBox" name="groupBox_8">
+                 <property name="font">
+                  <font>
+                   <pointsize>12</pointsize>
+                  </font>
+                 </property>
+                 <property name="styleSheet">
+                  <string notr="true">color: rgb(0, 0, 255);</string>
+                 </property>
+                 <property name="title">
+                  <string>档案图号</string>
+                 </property>
+                 <layout class="QGridLayout" name="gridLayout_3">
+                  <item row="0" column="0">
+                   <widget class="QListWidget" name="listWidgetDown">
+                    <property name="font">
+                     <font>
+                      <pointsize>12</pointsize>
+                     </font>
+                    </property>
+                    <property name="styleSheet">
+                     <string notr="true">color: rgb(255, 0, 0);</string>
+                    </property>
+                   </widget>
+                  </item>
+                 </layout>
+                </widget>
+               </item>
+              </layout>
+             </item>
+            </layout>
+           </item>
+           <item row="0" column="0">
+            <layout class="QGridLayout" name="gridLayout_17">
+             <item row="0" column="2">
+              <widget class="QPushButton" name="pushButtonOpenFile">
+               <property name="sizePolicy">
+                <sizepolicy hsizetype="Minimum" vsizetype="Preferred">
+                 <horstretch>0</horstretch>
+                 <verstretch>0</verstretch>
+                </sizepolicy>
+               </property>
+               <property name="font">
+                <font>
+                 <pointsize>12</pointsize>
+                </font>
+               </property>
+               <property name="text">
+                <string>选择文件</string>
+               </property>
+              </widget>
+             </item>
+             <item row="0" column="3">
+              <widget class="QLineEdit" name="lineEdit_path">
+               <property name="enabled">
+                <bool>false</bool>
+               </property>
+               <property name="font">
+                <font>
+                 <pointsize>12</pointsize>
+                </font>
+               </property>
+              </widget>
+             </item>
+             <item row="0" column="4">
+              <widget class="QPushButton" name="pushButton_load">
+               <property name="sizePolicy">
+                <sizepolicy hsizetype="Minimum" vsizetype="Preferred">
+                 <horstretch>0</horstretch>
+                 <verstretch>0</verstretch>
+                </sizepolicy>
+               </property>
+               <property name="font">
+                <font>
+                 <pointsize>12</pointsize>
+                </font>
+               </property>
+               <property name="text">
+                <string>加载</string>
+               </property>
+              </widget>
+             </item>
+             <item row="0" column="6">
+              <widget class="QLineEdit" name="lineEdit_input">
+               <property name="enabled">
+                <bool>false</bool>
+               </property>
+               <property name="font">
+                <font>
+                 <pointsize>12</pointsize>
+                </font>
+               </property>
+              </widget>
+             </item>
+             <item row="0" column="16">
+              <widget class="QPushButton" name="pushButton_11">
+               <property name="enabled">
+                <bool>false</bool>
+               </property>
+               <property name="text">
+                <string>系统设置</string>
+               </property>
+              </widget>
+             </item>
+             <item row="0" column="15">
+              <widget class="QPushButton" name="pushButtonFindpoint">
+               <property name="font">
+                <font>
+                 <pointsize>14</pointsize>
+                </font>
+               </property>
+               <property name="text">
+                <string>找点</string>
+               </property>
+              </widget>
+             </item>
+             <item row="1" column="10">
+              <widget class="QPushButton" name="pushButtonEdit">
+               <property name="enabled">
+                <bool>false</bool>
+               </property>
+               <property name="text">
+                <string>修改on/off</string>
+               </property>
+              </widget>
+             </item>
+             <item row="1" column="16">
+              <widget class="QPushButton" name="pushButtonRead">
+               <property name="text">
+                <string>Read</string>
+               </property>
+              </widget>
+             </item>
+             <item row="1" column="12">
+              <widget class="QPushButton" name="pushButtonSelfCheck">
+               <property name="text">
+                <string>自检</string>
+               </property>
+              </widget>
+             </item>
+             <item row="1" column="2">
+              <widget class="QComboBox" name="comboBox">
+               <property name="font">
+                <font>
+                 <pointsize>14</pointsize>
+                </font>
+               </property>
+              </widget>
+             </item>
+             <item row="1" column="3">
+              <widget class="QPushButton" name="pushButtonConnect">
+               <property name="font">
+                <font>
+                 <pointsize>14</pointsize>
+                </font>
+               </property>
+               <property name="text">
+                <string>连接</string>
+               </property>
+              </widget>
+             </item>
+             <item row="1" column="15">
+              <widget class="QPushButton" name="pushButtonLockScreen">
+               <property name="text">
+                <string>锁定</string>
+               </property>
+              </widget>
+             </item>
+             <item row="1" column="11">
+              <widget class="QPushButton" name="pushButtonSave">
+               <property name="enabled">
+                <bool>false</bool>
+               </property>
+               <property name="text">
+                <string>保存</string>
+               </property>
+              </widget>
+             </item>
+             <item row="0" column="10">
+              <widget class="QPushButton" name="pushButtonSelect">
+               <property name="sizePolicy">
+                <sizepolicy hsizetype="Minimum" vsizetype="Preferred">
+                 <horstretch>0</horstretch>
+                 <verstretch>0</verstretch>
+                </sizepolicy>
+               </property>
+               <property name="font">
+                <font>
+                 <pointsize>12</pointsize>
+                </font>
+               </property>
+               <property name="text">
+                <string>选择图号</string>
+               </property>
+              </widget>
+             </item>
+             <item row="0" column="11">
+              <widget class="QPushButton" name="pushButton_input">
+               <property name="sizePolicy">
+                <sizepolicy hsizetype="Minimum" vsizetype="Preferred">
+                 <horstretch>0</horstretch>
+                 <verstretch>0</verstretch>
+                </sizepolicy>
+               </property>
+               <property name="font">
+                <font>
+                 <pointsize>14</pointsize>
+                </font>
+               </property>
+               <property name="text">
+                <string>导入</string>
+               </property>
+              </widget>
+             </item>
+            </layout>
+           </item>
+          </layout>
+         </item>
+        </layout>
+       </widget>
+      </item>
+     </layout>
+    </item>
+   </layout>
+  </widget>
+  <widget class="QMenuBar" name="menuBar">
+   <property name="geometry">
+    <rect>
+     <x>0</x>
+     <y>0</y>
+     <width>1234</width>
+     <height>26</height>
+    </rect>
+   </property>
+  </widget>
+  <widget class="QToolBar" name="mainToolBar">
+   <attribute name="toolBarArea">
+    <enum>TopToolBarArea</enum>
+   </attribute>
+   <attribute name="toolBarBreak">
+    <bool>false</bool>
+   </attribute>
+  </widget>
+  <widget class="QStatusBar" name="statusBar"/>
+ </widget>
+ <layoutdefault spacing="6" margin="11"/>
+ <resources>
+  <include location="../resources/qiotest.qrc"/>
+ </resources>
+ <connections/>
+</ui>

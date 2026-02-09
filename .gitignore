@@ -1,0 +1,70 @@
+# Build directories
+build/
+cmake-build-*/
+out/
+
+# Compiled object files
+*.obj
+*.o
+*.lo
+
+# Precompiled headers
+*.gch
+*.pch
+
+# Compiled dynamic/shared libraries
+*.so
+*.dylib
+*.dll
+
+# Compiled static libraries
+*.lib
+*.a
+*.la
+
+# Executables
+*.exe
+*.out
+*.app
+
+# Qt generated files
+moc_*.cpp
+ui_*.h
+qrc_*.cpp
+*.qm
+
+# CMake generated files
+CMakeCache.txt
+CMakeFiles/
+cmake_install.cmake
+Makefile
+CMakeScripts/
+CTestTestfile.cmake
+
+# Visual Studio / MSVC
+*.vcxproj
+*.vcxproj.filters
+*.vcxproj.user
+*.sln
+*.suo
+*.user
+*.userosscache
+*.sdf
+*.opensdf
+*.opendb
+*.VC.db
+*.VC.VC.opendb
+x64/
+x86/
+Debug/
+Release/
+ipch/
+
+# VS Code
+.vscode/
+
+# OS generated files
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+.DS_Store
