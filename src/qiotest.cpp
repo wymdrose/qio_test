@@ -428,12 +428,19 @@ QIoTest::QIoTest(QWidget *parent)
             gpSignal->textSignal(widget->item(tItem.rowNo, 0), "  NG  ");
             widget->item(tItem.rowNo, 0)->setForeground(QColor(255, 0, 0));
             ui.labelResult->setText(QStringLiteral("<font style='font-size:40px; color:red;'>%0</font>").arg(lineMsg_));
+
+            ng_list_.clear();
+            ng_list_.append(tItem);
+            saveTestDataFile(true, false);
         }
         else
         {
             gpSignal->textSignal(widget->item(tItem.rowNo, 0), "  OK  ");
             widget->item(tItem.rowNo, 0)->setForeground(QColor(0, 255, 0));
             ui.labelResult->setText(QStringLiteral("<font style='font-size:40px; color:green;'>OK: %0 - %1</font>").arg(tItem.pinL).arg(tItem.pinR));
+
+            ng_list_.clear();
+            saveTestDataFile(true, true);
         }
 
         bStep_ = false;

@@ -1,6 +1,93 @@
 #include "qiotest.h"
 #include <QMessageBox>
 #include <QApplication>
+#include <QDateTime>
+#include <QDir>
+#include <QFile>
+#include <QFileInfo>
+#include <QTextStream>
+#include <QTextCodec>
+
+static QString csvEscape(QString s)
+{
+    const QChar comma(',');
+    const QChar quote('"');
+    const QChar lf('\n');
+    const QChar cr('\r');
+
+    const bool needsQuotes = s.contains(comma) || s.contains(quote) || s.contains(lf) || s.contains(cr);
+    if (s.contains(quote))
+        s.replace(quote, QStringLiteral("\"\""));
+    return needsQuotes ? (QStringLiteral("\"") + s + QStringLiteral("\"")) : s;
+}
+
+bool QIoTest::saveTestDataFile(bool isStepTest, bool overallOk)
+{
+    // Output folder: .\data next to exe
+    QDir exeDir(gExePath);
+    const QString outDirPath = exeDir.filePath("data");
+    if (!QDir().mkpath(outDirPath))
+    {
+        qDebug() << "Failed to create data dir:" << outDirPath;
+        return false;
+    }
+
+    const QString orderNo = QFileInfo(inputFile_).completeBaseName();
+    const QString ts = QDateTime::currentDateTime().toString("yyyyMMddHHmm");
+    const QString outName = ts + orderNo + ".csv";
+    const QString outPath = QDir(outDirPath).filePath(outName);
+
+    QFile f(outPath);
+    if (!f.open(QIODevice::WriteOnly | QIODevice::Truncate))
+    {
+        qDebug() << "Failed to open csv:" << outPath << f.errorString();
+        return false;
+    }
+
+    // UTF-8 BOM for Excel/Notepad on Windows
+    f.write("\xEF\xBB\xBF");
+    QTextStream tsOut(&f);
+    tsOut.setCodec("UTF-8");
+
+    const auto now = QDateTime::currentDateTime();
+    const QString dateStr = now.date().toString("yyyy/M/d");
+    const QString timeStr = now.time().toString("HH:mm");
+
+    tsOut
+        << csvEscape(QStringLiteral("年月日")) << ','
+        << csvEscape(QStringLiteral("时间")) << ','
+        << csvEscape(QStringLiteral("订单号")) << ','
+        << csvEscape(QStringLiteral("测试结果")) << ','
+        << csvEscape(QStringLiteral("NG针点")) << ','
+        << csvEscape(QStringLiteral("备注")) << "\r\n";
+
+    if (overallOk)
+    {
+        const QString summary = QStringLiteral("结果：OK 单步测试=%0").arg(isStepTest ? 1 : 0);
+        tsOut << csvEscape(dateStr) << ',' << csvEscape(timeStr) << ',' << csvEscape(orderNo) << ','
+              << csvEscape(summary) << ",,\r\n";
+    }
+    else
+    {
+        const QString summary = QStringLiteral("结果：NG 失败=%0").arg(ng_list_.count());
+        tsOut << csvEscape(dateStr) << ',' << csvEscape(timeStr) << ',' << csvEscape(orderNo) << ','
+              << csvEscape(summary) << ",,\r\n";
+
+        for (const auto& item : ng_list_)
+        {
+            const QString coor = item.coordinateL + QStringLiteral("→") + item.coordinateR;
+            const QString pins = item.pinL + QStringLiteral("→") + item.pinR;
+            tsOut << csvEscape(dateStr) << ',' << csvEscape(timeStr) << ',' << csvEscape(coor) << ','
+                  << csvEscape(item.category) << ',' << csvEscape(pins) << ",\r\n";
+        }
+    }
+
+    tsOut.flush();
+    f.close();
+
+    qDebug() << "Saved test data csv:" << outPath;
+    return true;
+}
 
 bool QIoTest::checkShort(QSet<int> item, int L, int R)
 {
@@ -177,4 +264,7 @@ void QIoTest::slotStartList()
     gpUi->tableWidget->resizeColumnsToContents();
     gpSignal->colorSignal(gpUi->pushButtonStart, "QPushButton{background:}");
     ui.pushButtonStart->setEnabled(true);
+
+    // Save test data to .\data (filename derived from inputFile_)
+    saveTestDataFile(false, result);
 }

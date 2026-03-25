@@ -56,6 +56,7 @@ private:
     }
 
     bool msgParse(bool bfirst = false);
+    bool saveTestDataFile(bool isStepTest, bool overallOk);
 
 private:
     Ui::QIoTestClass ui;
