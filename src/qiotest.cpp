@@ -22,7 +22,7 @@ QIoTest::QIoTest(QWidget *parent)
 {
     ui.setupUi(this);
 
-    this->setWindowTitle(QStringLiteral("导通检测仪  本机扫描总点数=1024  软件版本v3.0.12  东莞精伟智能"));
+    this->setWindowTitle(QStringLiteral("导通检测仪  本机扫描总点数=1024  软件版本v4.0.0  东莞精伟智能"));
 
     gpUi = &ui;
 
@@ -50,8 +50,13 @@ QIoTest::QIoTest(QWidget *parent)
     try
     {
 #ifdef HAVE_QXLSX
-        FileIo::XlsxFile file;
-        file.readExcel(gExePath + "/cfg/duizhao.xlsx", num_line_map_);
+        const auto mappingPath = gExePath + "/cfg/duizhao.xlsx";
+        if (QFileInfo::exists(mappingPath)) {
+            FileIo::XlsxFile file;
+            file.readExcel(mappingPath, num_line_map_);
+        } else {
+            qDebug() << "Mapping file missing:" << mappingPath;
+        }
 #else
         qDebug() << "QXlsx not available, skipping Excel file load";
 #endif

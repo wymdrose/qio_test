@@ -40,7 +40,7 @@ public:
                 connect(reply, &QModbusReply::finished, this, [this, reply]() {
                     if (reply->error() == QModbusDevice::NoError) {
                         const QModbusDataUnit unit = reply->result();
-                        emit valuesReceived(unit.values());
+                        emit valuesReceived(unit.values().toList());
                     } else {
                         qDebug() << "Modbus read error:" << reply->errorString();
                     }

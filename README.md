@@ -111,3 +111,6 @@ Proprietary - Dongguan Jingwei Intelligent Technology
 ## Version
 
 v3.0.12
+
+v4.0.0
+cmake --build build --config Debug --clean-first
