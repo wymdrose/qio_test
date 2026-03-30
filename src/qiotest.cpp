@@ -394,7 +394,7 @@ QIoTest::QIoTest(QWidget *parent)
             return;
         }
 
-        auto widget = ui.tableWidgetNg;
+        auto* widget = ui.tableWidgetNg;
         QList<QTableWidgetItem*> items = widget->selectedItems();
         if (items.count() < 1)
         {
@@ -402,20 +402,41 @@ QIoTest::QIoTest(QWidget *parent)
             return;
         }
 
-        // Read
-        bStep_ = true;
-        ui.pushButtonRead->clicked();
+        const int rowSel = widget->row(items.at(0));
+        if (rowSel < 0 || rowSel >= widget->rowCount())
+            return;
 
-        int i = widget->row(items.at(0));
+        auto cellText = [widget](int row, int col) -> QString {
+            QTableWidgetItem* it = widget->item(row, col);
+            return it ? it->text() : QString();
+        };
+
         itemTest tItem;
         tItem.bInlist = true;
         tItem.result = -1;
-        tItem.rowNo = i;
-        tItem.coordinateL = widget->item(i, 1)->text();
-        tItem.coordinateR = widget->item(i, 2)->text();
-        tItem.category = widget->item(i, 3)->text();
-        tItem.pinL = widget->item(i, 8)->text();
-        tItem.pinR = widget->item(i, 9)->text();
+        tItem.rowNo = rowSel;
+        tItem.coordinateL = cellText(rowSel, 1);
+        tItem.coordinateR = cellText(rowSel, 2);
+        tItem.category = cellText(rowSel, 3);
+        tItem.pinL = cellText(rowSel, 8);
+        tItem.pinR = cellText(rowSel, 9);
+
+        // Read — must snapshot row data before slotStartList(): it calls tableWidgetNg->clear(),
+        // which deletes the selected QTableWidgetItem pointers.
+        bStep_ = true;
+        slotStartList();
+
+        int rowNg = -1;
+        for (int r = 0; r < widget->rowCount(); ++r)
+        {
+            QTableWidgetItem* il = widget->item(r, 8);
+            QTableWidgetItem* ir = widget->item(r, 9);
+            if (il && ir && il->text() == tItem.pinL && ir->text() == tItem.pinR)
+            {
+                rowNg = r;
+                break;
+            }
+        }
 
         ui.labelCoordinateL->setText(tItem.coordinateL);
         ui.labelCoordinateR->setText(tItem.coordinateR);
@@ -425,8 +446,15 @@ QIoTest::QIoTest(QWidget *parent)
 
         if (!lineTest(tItem))
         {
-            gpSignal->textSignal(widget->item(tItem.rowNo, 0), "  NG  ");
-            widget->item(tItem.rowNo, 0)->setForeground(QColor(255, 0, 0));
+            if (rowNg >= 0)
+            {
+                QTableWidgetItem* status = widget->item(rowNg, 0);
+                if (status)
+                {
+                    gpSignal->textSignal(status, "  NG  ");
+                    status->setForeground(QColor(255, 0, 0));
+                }
+            }
             ui.labelResult->setText(QStringLiteral("<font style='font-size:40px; color:red;'>%0</font>").arg(lineMsg_));
 
             ng_list_.clear();
@@ -435,8 +463,15 @@ QIoTest::QIoTest(QWidget *parent)
         }
         else
         {
-            gpSignal->textSignal(widget->item(tItem.rowNo, 0), "  OK  ");
-            widget->item(tItem.rowNo, 0)->setForeground(QColor(0, 255, 0));
+            if (rowNg >= 0)
+            {
+                QTableWidgetItem* status = widget->item(rowNg, 0);
+                if (status)
+                {
+                    gpSignal->textSignal(status, "  OK  ");
+                    status->setForeground(QColor(0, 255, 0));
+                }
+            }
             ui.labelResult->setText(QStringLiteral("<font style='font-size:40px; color:green;'>OK: %0 - %1</font>").arg(tItem.pinL).arg(tItem.pinR));
 
             ng_list_.clear();
