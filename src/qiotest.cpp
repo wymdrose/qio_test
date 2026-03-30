@@ -22,7 +22,7 @@ QIoTest::QIoTest(QWidget *parent)
 {
     ui.setupUi(this);
 
-    this->setWindowTitle(QStringLiteral("导通检测仪  本机扫描总点数=1024  软件版本v4.0.0  东莞精伟智能"));
+    this->setWindowTitle(QStringLiteral("导通检测仪  本机扫描总点数=1024  软件版本v4.0.1  东莞精伟智能"));
 
     gpUi = &ui;
 

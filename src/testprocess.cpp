@@ -23,16 +23,24 @@ static QString csvEscape(QString s)
 
 bool QIoTest::saveTestDataFile(bool isStepTest, bool overallOk)
 {
-    // Output folder: .\data next to exe
+    // Output: .\data\<orderNo>\ next to exe (one folder per order)
     QDir exeDir(gExePath);
-    const QString outDirPath = exeDir.filePath("data");
+    const QString dataRoot = exeDir.filePath("data");
+
+    const QString orderNo = QFileInfo(inputFile_).completeBaseName();
+    QString orderFolderName = orderNo;
+    if (orderFolderName.isEmpty())
+        orderFolderName = QStringLiteral("_empty");
+    for (const QChar c : QStringLiteral("\\/:*?\"<>|"))
+        orderFolderName.replace(c, QLatin1Char('_'));
+
+    const QString outDirPath = QDir(dataRoot).filePath(orderFolderName);
     if (!QDir().mkpath(outDirPath))
     {
         qDebug() << "Failed to create data dir:" << outDirPath;
         return false;
     }
 
-    const QString orderNo = QFileInfo(inputFile_).completeBaseName();
     const QString ts = QDateTime::currentDateTime().toString("yyyyMMddHHmm");
     const QString outName = ts + orderNo + ".csv";
     const QString outPath = QDir(outDirPath).filePath(outName);
