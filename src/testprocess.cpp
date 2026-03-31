@@ -23,51 +23,55 @@ static QString csvEscape(QString s)
 
 bool QIoTest::saveTestDataFile(bool isStepTest, bool overallOk)
 {
-    // Output: .\data\<orderNo>\ next to exe (one folder per order)
+    // Output: .\data\<orderNo>.csv next to exe; same order appends to one file
     QDir exeDir(gExePath);
     const QString dataRoot = exeDir.filePath("data");
 
     const QString orderNo = QFileInfo(inputFile_).completeBaseName();
-    QString orderFolderName = orderNo;
-    if (orderFolderName.isEmpty())
-        orderFolderName = QStringLiteral("_empty");
+    QString orderFileBase = orderNo;
+    if (orderFileBase.isEmpty())
+        orderFileBase = QStringLiteral("_empty");
     for (const QChar c : QStringLiteral("\\/:*?\"<>|"))
-        orderFolderName.replace(c, QLatin1Char('_'));
+        orderFileBase.replace(c, QLatin1Char('_'));
 
-    const QString outDirPath = QDir(dataRoot).filePath(orderFolderName);
-    if (!QDir().mkpath(outDirPath))
+    if (!QDir().mkpath(dataRoot))
     {
-        qDebug() << "Failed to create data dir:" << outDirPath;
+        qDebug() << "Failed to create data dir:" << dataRoot;
         return false;
     }
 
-    const QString ts = QDateTime::currentDateTime().toString("yyyyMMddHHmm");
-    const QString outName = ts + orderNo + ".csv";
-    const QString outPath = QDir(outDirPath).filePath(outName);
+    const QString outPath = QDir(dataRoot).filePath(orderFileBase + QStringLiteral(".csv"));
+    const bool fileExists = QFile::exists(outPath);
 
     QFile f(outPath);
-    if (!f.open(QIODevice::WriteOnly | QIODevice::Truncate))
+    const QIODevice::OpenMode mode = fileExists
+        ? (QIODevice::WriteOnly | QIODevice::Append)
+        : (QIODevice::WriteOnly | QIODevice::Truncate);
+    if (!f.open(mode))
     {
         qDebug() << "Failed to open csv:" << outPath << f.errorString();
         return false;
     }
 
-    // UTF-8 BOM for Excel/Notepad on Windows
-    f.write("\xEF\xBB\xBF");
     QTextStream tsOut(&f);
     tsOut.setCodec("UTF-8");
+
+    if (!fileExists)
+    {
+        // UTF-8 BOM for Excel/Notepad on Windows (new file only)
+        f.write("\xEF\xBB\xBF");
+        tsOut
+            << csvEscape(QStringLiteral("年月日")) << ','
+            << csvEscape(QStringLiteral("时间")) << ','
+            << csvEscape(QStringLiteral("订单号")) << ','
+            << csvEscape(QStringLiteral("测试结果")) << ','
+            << csvEscape(QStringLiteral("NG针点")) << ','
+            << csvEscape(QStringLiteral("备注")) << "\r\n";
+    }
 
     const auto now = QDateTime::currentDateTime();
     const QString dateStr = now.date().toString("yyyy/M/d");
     const QString timeStr = now.time().toString("HH:mm");
-
-    tsOut
-        << csvEscape(QStringLiteral("年月日")) << ','
-        << csvEscape(QStringLiteral("时间")) << ','
-        << csvEscape(QStringLiteral("订单号")) << ','
-        << csvEscape(QStringLiteral("测试结果")) << ','
-        << csvEscape(QStringLiteral("NG针点")) << ','
-        << csvEscape(QStringLiteral("备注")) << "\r\n";
 
     if (overallOk)
     {
