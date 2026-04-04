@@ -8,9 +8,6 @@
 #include <QMessageBox>
 #include <QRegularExpression>
 #include <QSoundEffect>
-#ifdef HAVE_SERIALBUS
-#include "modbusmodel.h"
-#endif
 
 GLOBAL
 
@@ -518,7 +515,7 @@ QIoTest::QIoTest(QWidget *parent)
 
     connect(this, &QIoTest::signalStartList, this, &QIoTest::slotStartList);
 
-    modbudConnectSources();
+    setupConnectReadButtons();
 }
 
 QIoTest::~QIoTest()
@@ -585,14 +582,16 @@ void QIoTest::slotFindBegin()
     }
 }
 
-void QIoTest::slotValuesReady()
-{
-    // Implementation for modbus values ready
-}
-
 void QIoTest::pushButtonConnectSlot()
 {
-    // Implementation for connect button
+    const unsigned port = static_cast<unsigned>(ui.comboBox->currentIndex());
+    gpComClient->close();
+    gpComClient = std::make_shared<CommunicateClass::ComPortOne>(port);
+    if (gpComClient->init()) {
+        statusBar()->showMessage(QStringLiteral("串口 COM%1 连接成功").arg(port), 3000);
+    } else {
+        statusBar()->showMessage(QStringLiteral("串口 COM%1 打开失败").arg(port), 5000);
+    }
 }
 
 void QIoTest::pushButtonReadSlot()
@@ -601,13 +600,8 @@ void QIoTest::pushButtonReadSlot()
     emit signalStartList();
 }
 
-void QIoTest::modbudConnectSources()
+void QIoTest::setupConnectReadButtons()
 {
-#ifdef HAVE_SERIALBUS
-    // Initialize Modbus connections
-    gpModbusDevice = std::make_shared<QModbusTcpClient>();
-#endif
-
     connect(ui.pushButtonConnect, &QPushButton::clicked, [this]() {
         pushButtonConnectSlot();
     });
@@ -638,11 +632,6 @@ void QIoTest::updateSets(QVector<QSet<int>>& sets, int L, int R)
     newSet.insert(L);
     newSet.insert(R);
     sets.append(newSet);
-}
-
-void QIoTest::updateModbusSets()
-{
-    // Update Modbus sets
 }
 
 void QIoTest::updateTestTask()

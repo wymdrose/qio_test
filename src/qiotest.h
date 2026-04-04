@@ -40,13 +40,11 @@ public slots:
     void slotStartList();
     void slotFindBegin();
     void slotFind(QString);
-    void slotValuesReady();
 
 signals:
     void signalStartList();
     void signalFindBegin();
     void signalFind(QString);
-    void signalValuesReady();
 
 private:
     void _sleeploop(int ms) {
@@ -67,10 +65,9 @@ private:
 
     void pushButtonConnectSlot();
     void pushButtonReadSlot();
-    void modbudConnectSources();
+    void setupConnectReadButtons();
     void comConnectSources();
     void updateSets(QVector<QSet<int>>& sets, int L, int R);
-    void updateModbusSets();
     void updateTestTask();
     bool checkShort(QSet<int> item, int L, int R);
     bool checkPins(itemTest item);
@@ -87,7 +84,7 @@ private:
     bool bStep_ = false;
     bool enShort_ = false;
 
-    QVector<QSet<int>> modbusSets;
+    QVector<QSet<int>> pinLinkGroups;
     QVector<QSet<int>> testTaskSets;  // from csv
     std::set<std::set<uint16_t>> com_pairs_;
     bool parse_done_;

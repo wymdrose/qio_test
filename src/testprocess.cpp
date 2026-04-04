@@ -110,7 +110,7 @@ bool QIoTest::checkShort(QSet<int> item, int L, int R)
             item.remove(L);
             item.remove(R);
 
-            if (!set.contains(item))  // modbus set > test set
+            if (!set.contains(item))  // scan group larger than expected test pair set
             {
                 lineMsg_ = QObject::tr("短路:") + QString("%0 - %1").arg(L).arg(R);
                 for (const auto& pin : item)
@@ -134,13 +134,13 @@ bool QIoTest::checkPins(itemTest item)
     int R = item.pinR.toInt();
 
     int index;
-    for (index = 0; index < modbusSets.length(); index++)
+    for (index = 0; index < pinLinkGroups.length(); index++)
     {
-        auto&& modbusItem = modbusSets[index];
+        auto&& group = pinLinkGroups[index];
 
-        if (modbusItem.contains(L) && modbusItem.contains(R))
+        if (group.contains(L) && group.contains(R))
         {
-            if (enShort_ && !checkShort(modbusItem, L, R))
+            if (enShort_ && !checkShort(group, L, R))
             {
                 return false;  // short
             }
@@ -149,7 +149,7 @@ bool QIoTest::checkPins(itemTest item)
         }
     }
 
-    if (index >= modbusSets.length())
+    if (index >= pinLinkGroups.length())
     {
         lineMsg_ = QString("NG: %0 - %1").arg(L).arg(R);
         return false;  // disconnect

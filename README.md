@@ -1,11 +1,10 @@
 # QIoTest - IO Testing Application
 
-A Qt6-based IO testing application for conductivity detection, featuring serial port communication, Modbus TCP, and Excel file support.
+A Qt-based IO testing application for conductivity detection, featuring serial port communication and Excel file support.
 
 ## Features
 
 - Serial port communication for hardware testing
-- Modbus TCP client support
 - Excel file reading/writing (requires QXlsx library)
 - SQLite database for data storage
 - Test result tracking with OK/NG status
@@ -26,7 +25,6 @@ A Qt6-based IO testing application for conductivity detection, featuring serial 
 - Qt6::Widgets
 - Qt6::Network
 - Qt6::SerialPort
-- Qt6::SerialBus
 - Qt6::Sql
 - Qt6::Multimedia
 
@@ -64,8 +62,7 @@ io_test/
 │   ├── xlsxfile.h         # Excel file handling
 │   ├── mysignal.h         # Qt signal helpers
 │   ├── mysqlite.h         # SQLite wrapper
-│   ├── dologs.h           # Logging utilities
-│   └── modbusmodel.h      # Modbus helper
+│   └── dologs.h           # Logging utilities
 ├── ui/                    # UI files
 │   └── qiotest.ui         # Main window UI
 ├── resources/             # Resources

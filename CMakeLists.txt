@@ -26,14 +26,6 @@ find_package(Qt5 REQUIRED COMPONENTS
     Multimedia
 )
 
-# Optional: Qt5SerialBus (for Modbus support)
-find_package(Qt5 COMPONENTS SerialBus QUIET)
-if(Qt5SerialBus_FOUND)
-    message(STATUS "Qt5SerialBus found - Modbus support enabled")
-else()
-    message(STATUS "Qt5SerialBus not found - Modbus support disabled")
-endif()
-
 # QXlsx - included as subdirectory
 set(QT_VERSION_MAJOR 5)
 add_subdirectory(third_party/QXlsx/QXlsx)
@@ -54,7 +46,6 @@ set(HEADERS
     include/mysignal.h
     include/mysqlite.h
     include/dologs.h
-    include/modbusmodel.h
 )
 
 # UI files
@@ -92,12 +83,6 @@ target_link_libraries(${PROJECT_NAME} PRIVATE
     Qt5::Sql
     Qt5::Multimedia
 )
-
-# Link Qt5SerialBus if available
-if(Qt5SerialBus_FOUND)
-    target_link_libraries(${PROJECT_NAME} PRIVATE Qt5::SerialBus)
-    target_compile_definitions(${PROJECT_NAME} PRIVATE HAVE_SERIALBUS)
-endif()
 
 # Link QXlsx
 target_link_libraries(${PROJECT_NAME} PRIVATE QXlsx::QXlsx)
