@@ -40,11 +40,13 @@ public slots:
     void slotStartList();
     void slotFindBegin();
     void slotFind(QString);
-
+    void slotValuesReady();
+    
 signals:
     void signalStartList();
     void signalFindBegin();
     void signalFind(QString);
+    void signalValuesReady();
 
 private:
     void _sleeploop(int ms) {
