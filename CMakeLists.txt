@@ -139,4 +139,5 @@ install(TARGETS ${PROJECT_NAME}
 option(BUILD_TOOLS "Build auxiliary tools (VspServer, etc.)" ON)
 if(BUILD_TOOLS)
     add_subdirectory(tool/vsp_server)
+    add_subdirectory(tool/gpcom_client_test)
 endif()
