@@ -12,7 +12,7 @@ int main(int argc, char *argv[])
     // Set UTF-8 encoding (Qt6 uses UTF-8 by default)
     QCoreApplication::setOrganizationName("Dongguan Jingwei");
     QCoreApplication::setApplicationName("QIoTest");
-    QCoreApplication::setApplicationVersion("3.0.12");
+    QCoreApplication::setApplicationVersion("4.0.x");
 
     QIoTest* w = new QIoTest();
     w->showMaximized();
