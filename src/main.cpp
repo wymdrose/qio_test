@@ -9,7 +9,7 @@ int main(int argc, char *argv[])
 {
     QApplication a(argc, argv);
 
-    // Set UTF-8 encoding (Qt6 uses UTF-8 by default)
+    // MSVC builds use /utf-8; Qt 5 source encoding follows the build.
     QCoreApplication::setOrganizationName("Dongguan Jingwei");
     QCoreApplication::setApplicationName("QIoTest");
     QCoreApplication::setApplicationVersion("4.0.x");

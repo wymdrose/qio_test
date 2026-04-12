@@ -13,27 +13,26 @@ A Qt-based IO testing application for conductivity detection, featuring serial p
 
 ## Requirements
 
-- Qt 6.2 or later
+- Qt 5.15 (or compatible 5.x), e.g. via vcpkg (`qt5-base`, `qt5-serialport`, `qt5-multimedia`)
 - CMake 3.16 or later
 - C++17 compatible compiler
-- Optional: QXlsx library for Excel file support
+- QXlsx is vendored under `third_party/QXlsx`
 
-### Required Qt6 Modules
+### Required Qt5 modules
 
-- Qt6::Core
-- Qt6::Gui
-- Qt6::Widgets
-- Qt6::Network
-- Qt6::SerialPort
-- Qt6::Sql
-- Qt6::Multimedia
+- Qt5::Core
+- Qt5::Gui
+- Qt5::Widgets
+- Qt5::SerialPort
+- Qt5::Sql
+- Qt5::Multimedia
 
 ## Building
 
 ### Windows (with Qt Creator)
 
 1. Open `CMakeLists.txt` with Qt Creator
-2. Configure the project with your Qt6 kit
+2. Configure with a Qt 5 kit (or a CMake toolchain that supplies Qt5, such as vcpkg)
 3. Build and run
 
 ### Command Line Build
@@ -41,7 +40,7 @@ A Qt-based IO testing application for conductivity detection, featuring serial p
 ```bash
 mkdir build
 cd build
-cmake -DCMAKE_PREFIX_PATH="C:/Qt/6.x.x/msvc2019_64" ..
+cmake -DCMAKE_TOOLCHAIN_FILE="C:/path/to/vcpkg/scripts/buildsystems/vcpkg.cmake" ..
 cmake --build . --config Release
 ```
 
@@ -58,7 +57,7 @@ io_test/
 │   ├── testprocess.cpp    # Test processing logic
 │   └── global.h           # Global declarations
 ├── include/               # Header-only libraries
-│   ├── communicatelib.h   # TCP/Serial communication
+│   ├── communicatelib.h   # Serial communication
 │   ├── xlsxfile.h         # Excel file handling
 │   ├── mysignal.h         # Qt signal helpers
 │   ├── mysqlite.h         # SQLite wrapper
@@ -91,14 +90,14 @@ git clone https://github.com/QtExcel/QXlsx.git
 # Build and install
 cd QXlsx
 mkdir build && cd build
-cmake -DCMAKE_PREFIX_PATH="C:/Qt/6.x.x/msvc2019_64" ..
+cmake -DCMAKE_PREFIX_PATH="C:/Qt/5.15.2/msvc2019_64" ..
 cmake --build . --config Release
 cmake --install . --prefix "C:/QXlsx"
 ```
 
 Then add to your CMake configure command:
 ```bash
-cmake -DCMAKE_PREFIX_PATH="C:/Qt/6.x.x/msvc2019_64;C:/QXlsx" ..
+cmake -DCMAKE_PREFIX_PATH="C:/Qt/5.15.2/msvc2019_64;C:/QXlsx" ..
 ```
 
 ## License

@@ -20,7 +20,6 @@ find_package(Qt5 REQUIRED COMPONENTS
     Core
     Gui
     Widgets
-    Network
     SerialPort
     Sql
     Multimedia
@@ -78,7 +77,6 @@ target_link_libraries(${PROJECT_NAME} PRIVATE
     Qt5::Core
     Qt5::Gui
     Qt5::Widgets
-    Qt5::Network
     Qt5::SerialPort
     Qt5::Sql
     Qt5::Multimedia
@@ -120,9 +118,3 @@ install(TARGETS ${PROJECT_NAME}
     RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
 )
 
-# --- Tools ---
-option(BUILD_TOOLS "Build auxiliary tools (VspServer, etc.)" ON)
-if(BUILD_TOOLS)
-    add_subdirectory(tool/vsp_server)
-    add_subdirectory(tool/gpcom_client_test)
-endif()
