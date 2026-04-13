@@ -6,6 +6,8 @@
 #include <QFile>
 #include <QTextStream>
 #include <QCoreApplication>
+#include <QDir>
+#include <QMutex>
 
 namespace Dologs
 {
@@ -13,6 +15,14 @@ namespace Dologs
 inline void outlog(const QString& msg)
 {
     qDebug() << QDateTime::currentDateTime().toString("yyyy-MM-dd hh:mm:ss") << msg;
+}
+
+inline QString defaultLogFilePath()
+{
+    const QString baseDir = QCoreApplication::applicationDirPath() + "/logs";
+    QDir().mkpath(baseDir);
+    const QString date = QDate::currentDate().toString("yyyyMMdd");
+    return baseDir + QString("/qio_%1.log").arg(date);
 }
 
 inline void outputMessage(QtMsgType type, const QMessageLogContext& context, const QString& msg)
@@ -38,11 +48,24 @@ inline void outputMessage(QtMsgType type, const QMessageLogContext& context, con
         break;
     }
 
-    QFile outFile(QCoreApplication::applicationDirPath() + "/log.txt");
-    if (outFile.open(QIODevice::WriteOnly | QIODevice::Append)) {
+    static QMutex sMutex;
+    QMutexLocker locker(&sMutex);
+
+    QFile outFile(defaultLogFilePath());
+    if (outFile.open(QIODevice::WriteOnly | QIODevice::Append | QIODevice::Text)) {
         QTextStream ts(&outFile);
-        ts << QDateTime::currentDateTime().toString("yyyy-MM-dd hh:mm:ss ") << txt << Qt::endl;
+        ts << QDateTime::currentDateTime().toString("yyyy-MM-dd hh:mm:ss.zzz ") << txt << Qt::endl;
+        ts.flush();
     }
+
+    if (type == QtFatalMsg) {
+        abort();
+    }
+}
+
+inline void installQtMessageHandler()
+{
+    qInstallMessageHandler(outputMessage);
 }
 
 }  // namespace Dologs

@@ -1,6 +1,7 @@
 #include "qiotest.h"
 #include <QApplication>
 #include <QDebug>
+#include "dologs.h"
 
 // Global variables
 std::shared_ptr<DatabaseCover::MySqLite> gpDoSqlite;
@@ -13,6 +14,8 @@ int main(int argc, char *argv[])
     QCoreApplication::setOrganizationName("Dongguan Jingwei");
     QCoreApplication::setApplicationName("QIoTest");
     QCoreApplication::setApplicationVersion("4.0.x");
+
+    Dologs::installQtMessageHandler();
 
     QIoTest* w = new QIoTest();
     w->showMaximized();
