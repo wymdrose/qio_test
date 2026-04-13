@@ -161,7 +161,7 @@ public:
             loop.exec();
         }
 
-        qDebug() << QDateTime::currentDateTime().toString("yyyy-MM-dd hh:mm:ss:zzz") << mPortNo << "rec:" << tRecv.toHex();
+        qDebug() << QDateTime::currentDateTime().toString("yyyy-MM-dd hh:mm:ss:zzz") << mPortNo << "rec:" << tRecv;
         return true;
     }
 

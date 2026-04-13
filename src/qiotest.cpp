@@ -19,7 +19,7 @@ QIoTest::QIoTest(QWidget *parent)
 {
     ui.setupUi(this);
 
-    this->setWindowTitle(QStringLiteral("导通检测仪  本机扫描总点数=1024  软件版本v4.0.4  东莞精伟智能"));
+    this->setWindowTitle(QStringLiteral("导通检测仪  本机扫描总点数=1024  软件版本v4.0.5  东莞精伟智能"));
 
     gpUi = &ui;
 
@@ -546,7 +546,25 @@ void QIoTest::slotFindBegin()
             continue;
         }
 
-        std::vector<uint8_t> msg(recv.begin(), recv.end());
+        QByteArray msgBytes = recv;
+        const auto isAsciiHex = [](const QByteArray& b) -> bool {
+            if (b.isEmpty() || (b.size() % 2) != 0) return false;
+            for (const auto ch : b)
+            {
+                if (!((ch >= '0' && ch <= '9') ||
+                      (ch >= 'a' && ch <= 'f') ||
+                      (ch >= 'A' && ch <= 'F')))
+                {
+                    return false;
+                }
+            }
+            return true;
+        };
+        if (isAsciiHex(recv))
+        {
+            msgBytes = QByteArray::fromHex(recv);
+        }
+        std::vector<uint8_t> msg(msgBytes.begin(), msgBytes.end());
 
         if (msg.size() < 3)
         {
@@ -721,7 +739,25 @@ bool QIoTest::msgParse(bool bfirst)
 	}
 	Dologs::outlog(recv.toHex());
 
-	std::vector<uint8_t> msg(recv.begin(), recv.end());
+	QByteArray msgBytes = recv;
+	const auto isAsciiHex = [](const QByteArray& b) -> bool {
+		if (b.isEmpty() || (b.size() % 2) != 0) return false;
+		for (const auto ch : b)
+		{
+			if (!((ch >= '0' && ch <= '9') ||
+				  (ch >= 'a' && ch <= 'f') ||
+				  (ch >= 'A' && ch <= 'F')))
+			{
+				return false;
+			}
+		}
+		return true;
+	};
+	if (isAsciiHex(recv))
+	{
+		msgBytes = QByteArray::fromHex(recv);
+	}
+	std::vector<uint8_t> msg(msgBytes.begin(), msgBytes.end());
 
 	if (msg.size() < 6)
 	{
