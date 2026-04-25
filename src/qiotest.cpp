@@ -19,7 +19,7 @@ QIoTest::QIoTest(QWidget *parent)
 {
     ui.setupUi(this);
 
-    this->setWindowTitle(QStringLiteral("导通检测仪  本机扫描总点数=1024  软件版本v4.0.5  东莞精伟智能"));
+    this->setWindowTitle(QStringLiteral("导通检测仪  本机扫描总点数=1024  软件版本v4.0.6  东莞精伟智能"));
 
     gpUi = &ui;
 
@@ -688,6 +688,26 @@ void QIoTest::updateSets(QVector<QSet<int>>& sets, int L, int R)
     sets.append(newSet);
 }
 
+void QIoTest::updatePinLinkGroups()
+{
+	pinLinkGroups.clear();
+
+	for (const auto& item : com_pairs_)
+	{
+		auto val_p = std::vector<uint16_t>(item.begin(), item.end());
+		if (val_p.size() < 2)
+		{
+			continue;
+		}
+
+		uint16_t a = (val_p[0] / 64) * 64 + (64 - val_p[0] % 64);
+		uint16_t b = (val_p[1] / 64) * 64 + (64 - val_p[1] % 64);
+
+		updateSets(pinLinkGroups, a, b);
+	}
+
+}
+
 void QIoTest::updateTestTask()
 {
     testTaskSets.clear();
@@ -712,7 +732,7 @@ void QIoTest::slotValuesReady()
 {
 
 	updateTestTask();
-
+    updatePinLinkGroups();
 	//
 	if (bStep_)
 	{

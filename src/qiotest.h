@@ -70,6 +70,7 @@ private:
     void setupConnectReadButtons();
     void comConnectSources();
     void updateSets(QVector<QSet<int>>& sets, int L, int R);
+    void updatePinLinkGroups();
     void updateTestTask();
     bool checkShort(QSet<int> item, int L, int R);
     bool checkPins(itemTest item);
