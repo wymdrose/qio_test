@@ -19,7 +19,7 @@ QIoTest::QIoTest(QWidget *parent)
 {
     ui.setupUi(this);
 
-    this->setWindowTitle(QStringLiteral("导通检测仪  本机扫描总点数=1024  软件版本v4.0.6  东莞精伟智能"));
+    this->setWindowTitle(QStringLiteral("导通检测仪  本机扫描总点数=1024  软件版本v4.0.7  东莞精伟智能"));
 
     gpUi = &ui;
 
@@ -421,7 +421,7 @@ QIoTest::QIoTest(QWidget *parent)
         // Read — must snapshot row data before slotStartList(): it calls tableWidgetNg->clear(),
         // which deletes the selected QTableWidgetItem pointers.
         bStep_ = true;
-        slotStartList();
+        ui.pushButtonRead->clicked();
 
         int rowNg = -1;
         for (int r = 0; r < widget->rowCount(); ++r)
