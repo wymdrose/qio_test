@@ -4,10 +4,100 @@
 #include <QItemSelectionModel>
 #include <vector>
 #include <QVBoxLayout>
+#include <QHBoxLayout>
 #include <QFileDialog>
 #include <QMessageBox>
+#include <QMouseEvent>
+#include <QPushButton>
 #include <QRegularExpression>
 #include <QSoundEffect>
+
+namespace {
+
+class TitleBar : public QWidget
+{
+public:
+    explicit TitleBar(const QString &title, QMainWindow *window)
+        : QWidget(nullptr)
+        , mWindow(window)
+    {
+        setObjectName(QStringLiteral("customTitleBar"));
+        setFixedHeight(32);
+        setStyleSheet(QStringLiteral("#customTitleBar { background-color: #dcdcdc; }"));
+
+        auto *layout = new QHBoxLayout(this);
+        layout->setContentsMargins(12, 0, 0, 0);
+        layout->setSpacing(0);
+
+        auto *titleLabel = new QLabel(title, this);
+        QFont titleFont = titleLabel->font();
+        titleFont.setPointSize(14);
+        titleFont.setBold(true);
+        titleLabel->setFont(titleFont);
+        titleLabel->setStyleSheet(QStringLiteral("color: blue; background: transparent;"));
+        titleLabel->setAttribute(Qt::WA_TransparentForMouseEvents, true);
+        layout->addWidget(titleLabel, 1);
+
+        auto makeButton = [this](const QString &text) {
+            auto *button = new QPushButton(text, this);
+            button->setFixedSize(36, 32);
+            button->setFlat(true);
+            button->setStyleSheet(QStringLiteral(
+                "QPushButton { background: transparent; font-size: 14px; }"
+                "QPushButton:hover { background-color: #c8c8c8; }"));
+            return button;
+        };
+
+        auto *minButton = makeButton(QStringLiteral("-"));
+        auto *maxButton = makeButton(QStringLiteral("+"));
+        auto *closeButton = makeButton(QStringLiteral("x"));
+        closeButton->setStyleSheet(QStringLiteral(
+            "QPushButton { background: transparent; font-size: 16px; }"
+            "QPushButton:hover { background-color: red; color: white; }"));
+
+        layout->addWidget(minButton);
+        layout->addWidget(maxButton);
+        layout->addWidget(closeButton);
+
+        connect(minButton, &QPushButton::clicked, mWindow, &QWidget::showMinimized);
+        connect(maxButton, &QPushButton::clicked, this, [this]() {
+            if (mWindow->isMaximized()) {
+                mWindow->showNormal();
+            } else {
+                mWindow->showMaximized();
+            }
+        });
+        connect(closeButton, &QPushButton::clicked, mWindow, &QWidget::close);
+    }
+
+protected:
+    void mousePressEvent(QMouseEvent *event) override
+    {
+        if (event->button() == Qt::LeftButton && mWindow) {
+#ifdef Q_OS_WIN
+            ReleaseCapture();
+            SendMessage(reinterpret_cast<HWND>(mWindow->winId()), WM_SYSCOMMAND, SC_MOVE | HTCAPTION, 0);
+#endif
+            event->accept();
+        }
+    }
+
+    void mouseDoubleClickEvent(QMouseEvent *event) override
+    {
+        if (event->button() == Qt::LeftButton && mWindow) {
+            if (mWindow->isMaximized()) {
+                mWindow->showNormal();
+            } else {
+                mWindow->showMaximized();
+            }
+        }
+    }
+
+private:
+    QMainWindow *mWindow;
+};
+
+} // namespace
 
 GLOBAL
 
@@ -19,7 +109,7 @@ QIoTest::QIoTest(QWidget *parent)
 {
     ui.setupUi(this);
 
-    this->setWindowTitle(QStringLiteral("导通检测仪  本机扫描总点数=1024  软件版本v4.0.7  东莞精伟智能"));
+    this->setWindowTitle(QStringLiteral("导通检测仪  本机扫描总点数=1024  软件版本v4.0.8  东莞精伟智能"));
 
     gpUi = &ui;
 
@@ -523,7 +613,36 @@ QIoTest::QIoTest(QWidget *parent)
     connect(this, &QIoTest::signalStartList, this, &QIoTest::slotStartList);
 
     setupConnectReadButtons();
+    setupCustomTitleBar();
 }
+
+void QIoTest::setupCustomTitleBar()
+{
+    setWindowFlag(Qt::FramelessWindowHint, true);
+    setMenuWidget(new TitleBar(windowTitle(), this));
+}
+
+#if defined(Q_OS_WIN)
+bool QIoTest::nativeEvent(const QByteArray &eventType, void *message, long *result)
+{
+    if (eventType == "windows_generic_MSG" || eventType == "windows_local_MSG") {
+        auto *msg = static_cast<MSG *>(message);
+        if (msg->message == WM_GETMINMAXINFO) {
+            auto *mmi = reinterpret_cast<MINMAXINFO *>(msg->lParam);
+            const HMONITOR monitor = MonitorFromWindow(msg->hwnd, MONITOR_DEFAULTTONEAREST);
+            MONITORINFO monitorInfo = { sizeof(monitorInfo) };
+            GetMonitorInfo(monitor, &monitorInfo);
+            mmi->ptMaxPosition.x = monitorInfo.rcWork.left - monitorInfo.rcMonitor.left;
+            mmi->ptMaxPosition.y = monitorInfo.rcWork.top - monitorInfo.rcMonitor.top;
+            mmi->ptMaxSize.x = monitorInfo.rcWork.right - monitorInfo.rcWork.left;
+            mmi->ptMaxSize.y = monitorInfo.rcWork.bottom - monitorInfo.rcWork.top;
+            *result = 0;
+            return true;
+        }
+    }
+    return QMainWindow::nativeEvent(eventType, message, result);
+}
+#endif
 
 QIoTest::~QIoTest()
 {

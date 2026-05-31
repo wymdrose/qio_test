@@ -9,6 +9,10 @@
 #include <QTimer>
 #include <QEventLoop>
 
+#ifdef Q_OS_WIN
+#include <windows.h>
+#endif
+
 enum H_L
 {
     L, H
@@ -57,6 +61,11 @@ private:
 
     bool msgParse(bool bfirst = false);
     bool saveTestDataFile(bool isStepTest, bool overallOk);
+    void setupCustomTitleBar();
+
+#if defined(Q_OS_WIN)
+    bool nativeEvent(const QByteArray &eventType, void *message, long *result) override;
+#endif
 
 private:
     Ui::QIoTestClass ui;

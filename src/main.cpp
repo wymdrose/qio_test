@@ -19,7 +19,6 @@ int main(int argc, char *argv[])
 
     QIoTest* w = new QIoTest();
     w->showMaximized();
-    w->show();
 
     // Initialize SQLite database
     gpDoSqlite = std::make_shared<DatabaseCover::MySqLite>("dosqlite");
