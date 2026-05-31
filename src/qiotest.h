@@ -76,6 +76,7 @@ private:
 
     void pushButtonConnectSlot();
     void pushButtonReadSlot();
+    void setupTableColumnHeaders(QTableWidget* table);
     void setupConnectReadButtons();
     void comConnectSources();
     void updateSets(QVector<QSet<int>>& sets, int L, int R);

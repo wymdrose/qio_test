@@ -118,9 +118,9 @@ QIoTest::QIoTest(QWidget *parent)
     gExePath = QCoreApplication::applicationDirPath();
 
     gpUi->tabWidget->setCurrentIndex(0);
-    gpUi->tableWidget->horizontalHeader()->setVisible(false);
+    setupTableColumnHeaders(gpUi->tableWidget);
+    setupTableColumnHeaders(gpUi->tableWidgetNg);
     gpUi->tableWidget->verticalHeader()->setVisible(false);
-    gpUi->tableWidgetNg->horizontalHeader()->setVisible(false);
     gpUi->tableWidgetNg->verticalHeader()->setVisible(false);
 
     // COM port init
@@ -327,6 +327,8 @@ QIoTest::QIoTest(QWidget *parent)
             return;
         }
 #endif
+
+        setupTableColumnHeaders(gpUi->tableWidget);
 
         // Load UI
         gpUi->tableWidget->resizeColumnsToContents();
@@ -614,6 +616,31 @@ QIoTest::QIoTest(QWidget *parent)
 
     setupConnectReadButtons();
     setupCustomTitleBar();
+}
+
+void QIoTest::setupTableColumnHeaders(QTableWidget* table)
+{
+    if (!table)
+        return;
+
+    static const QStringList headers = {
+        QStringLiteral("行号"),
+        QStringLiteral("坐标_L"),
+        QStringLiteral("坐标_R"),
+        QStringLiteral("图号"),
+        QString(),
+        QString(),
+        QString(),
+        QString(),
+        QStringLiteral("针点_L"),
+        QStringLiteral("针点_R"),
+    };
+
+    if (table->columnCount() < headers.size())
+        table->setColumnCount(headers.size());
+
+    table->setHorizontalHeaderLabels(headers);
+    table->horizontalHeader()->setVisible(true);
 }
 
 void QIoTest::setupCustomTitleBar()

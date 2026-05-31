@@ -236,6 +236,7 @@ void QIoTest::slotStartList()
 
     ng_list_.clear();
     gpUi->tableWidgetNg->clear();
+    setupTableColumnHeaders(gpUi->tableWidgetNg);
     for (auto it = mListTest.begin(); it != mListTest.end(); ++it)
     {
         QApplication::processEvents();
@@ -290,7 +291,7 @@ void QIoTest::slotStartList()
 
     // NG list show
     gpUi->tableWidgetNg->setRowCount(ng_list_.count());
-    gpUi->tableWidgetNg->setColumnCount(10);
+    setupTableColumnHeaders(gpUi->tableWidgetNg);
     for (int i = 0; i < ng_list_.count(); i++)
     {
         int index = 0;
