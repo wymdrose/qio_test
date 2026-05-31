@@ -158,6 +158,44 @@ bool QIoTest::checkPins(itemTest item)
     return true;
 }
 
+bool QIoTest::shouldSkipTestLine(const QString& category)
+{
+    if (!category.contains(QStringLiteral("删除")))
+        return false;
+
+    int start = category.indexOf(QLatin1Char('('));
+    if (start < 0)
+        start = category.indexOf(QStringLiteral("（"));
+    if (start < 0)
+        return false;
+
+    int end = category.indexOf(QLatin1Char(')'), start + 1);
+    if (end < 0)
+        end = category.indexOf(QStringLiteral("）"), start + 1);
+    if (end <= start)
+        return false;
+
+    const QString inner = category.mid(start + 1, end - start - 1);
+    const QStringList parts = inner.split(QLatin1Char('/'), Qt::SkipEmptyParts);
+
+    for (QString part : parts)
+    {
+        part = part.trimmed();
+        part.remove(QStringLiteral("删除"));
+        part = part.trimmed();
+        if (part.isEmpty())
+            continue;
+
+        for (int i = 0; i < ui.listWidgetUp->count(); ++i)
+        {
+            if (ui.listWidgetUp->item(i)->text() == part)
+                return true;
+        }
+    }
+
+    return false;
+}
+
 bool QIoTest::selfCheck()
 {
     for (const auto& item : com_pairs_)
@@ -219,6 +257,9 @@ void QIoTest::slotStartList()
             it->bInlist = false;
             continue;
         }
+
+        if (shouldSkipTestLine(it->category))
+            continue;
 
         ui.tableWidget->selectRow(it->rowNo);
         ui.tableWidget->setFocus();

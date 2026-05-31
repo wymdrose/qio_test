@@ -75,6 +75,7 @@ private:
     bool checkShort(QSet<int> item, int L, int R);
     bool checkPins(itemTest item);
     bool selfCheck();
+    bool shouldSkipTestLine(const QString& category);
 
     std::vector<std::vector<QString>> num_line_map_; // duizhao
     QMap<QString, QList<QString>> mapTest;  // need to test from category

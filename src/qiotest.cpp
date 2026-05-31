@@ -441,6 +441,13 @@ QIoTest::QIoTest(QWidget *parent)
         ui.labelPinR->setText(tItem.pinR);
         ui.labelCategory->setText(tItem.category);
 
+        if (shouldSkipTestLine(tItem.category))
+        {
+            ui.labelResult->setText(QStringLiteral("<font style='font-size:40px; color:green;'>跳过</font>"));
+            bStep_ = false;
+            return;
+        }
+
         if (!lineTest(tItem))
         {
             if (rowNg >= 0)
@@ -719,6 +726,9 @@ void QIoTest::updateTestTask()
 			it->bInlist = false;
 			continue;
 		}
+
+		if (shouldSkipTestLine(it->category))
+			continue;
 
 		int L = it->pinL.toInt();
 		int R = it->pinR.toInt();
