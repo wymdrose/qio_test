@@ -763,15 +763,28 @@ void QIoTest::pushButtonConnectSlot()
     const unsigned port = static_cast<unsigned>(ui.comboBox->currentIndex());
     gpComClient->close();
     gpComClient = std::make_shared<CommunicateClass::ComPortOne>(port);
-    if (gpComClient->init()) {
-        gpSignal->colorSignal(gpUi->pushButtonConnect, "QPushButton{background:lightgreen}");
-	    gpSignal->showDialogSignal(QStringLiteral("<font style='font-size:50px; background-color:white; color:green;'>连接成功</font>"));
-        statusBar()->showMessage(QStringLiteral("串口 COM%1 连接成功").arg(port), 3000);
-    } else {
+
+    const auto showConnectFail = [this, port]() {
+        gpComClient->close();
         gpSignal->colorSignal(gpUi->pushButtonConnect, "QPushButton{background:red}");
-		gpSignal->showDialogSignal(QStringLiteral("<font style='font-size:50px; background-color:white; color:red;'>连接失败</font>"));
-        statusBar()->showMessage(QStringLiteral("串口 COM%1 打开失败").arg(port), 5000);
+        gpSignal->showDialogSignal(QStringLiteral("<font style='font-size:50px; background-color:white; color:red;'>连接失败</font>"));
+        statusBar()->showMessage(QStringLiteral("串口 COM%1 连接失败").arg(port), 5000);
+    };
+
+    if (!gpComClient->init()) {
+        showConnectFail();
+        return;
     }
+
+    QByteArray recv;
+    if (!gpComClient->communicate(QByteArray::fromHex("AA01"), recv) || recv.isEmpty()) {
+        showConnectFail();
+        return;
+    }
+
+    gpSignal->colorSignal(gpUi->pushButtonConnect, "QPushButton{background:lightgreen}");
+    gpSignal->showDialogSignal(QStringLiteral("<font style='font-size:50px; background-color:white; color:green;'>连接成功</font>"));
+    statusBar()->showMessage(QStringLiteral("串口 COM%1 连接成功").arg(port), 3000);
 }
 
 void QIoTest::pushButtonReadSlot()
