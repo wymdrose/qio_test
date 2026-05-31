@@ -28,7 +28,7 @@
          </font>
         </property>
         <property name="styleSheet">
-         <string notr="true">color: rgb(0, 0, 255);</string>
+         <string notr="true">QGroupBox { border: 4px solid #1976D2; border-radius: 6px; margin-top: 12px; padding-top: 8px; } QGroupBox::title { subcontrol-origin: margin; subcontrol-position: top left; padding: 0 6px; color: #1976D2; }</string>
         </property>
         <property name="title">
          <string>窗口功能区</string>
@@ -45,6 +45,9 @@
                  <pointsize>12</pointsize>
                 </font>
                </property>
+               <property name="styleSheet">
+                <string notr="true">QGroupBox { border: 4px solid #00897B; border-radius: 6px; margin-top: 12px; padding-top: 8px; } QGroupBox::title { subcontrol-origin: margin; subcontrol-position: top left; padding: 0 6px; color: #00897B; }</string>
+               </property>
                <property name="title">
                 <string>测试窗口</string>
                </property>
@@ -60,7 +63,7 @@
                         <item>
                          <widget class="QGroupBox" name="groupBox_4">
                           <property name="styleSheet">
-                           <string notr="true">color: rgb(0, 0, 255);</string>
+                           <string notr="true">QGroupBox { border: 4px solid #388E3C; border-radius: 6px; margin-top: 12px; padding-top: 8px; } QGroupBox::title { subcontrol-origin: margin; subcontrol-position: top left; padding: 0 6px; color: #388E3C; }</string>
                           </property>
                           <property name="title">
                            <string>ok/ng</string>
@@ -169,7 +172,7 @@
                         <item>
                          <widget class="QGroupBox" name="groupBox_5">
                           <property name="styleSheet">
-                           <string notr="true">color: rgb(0, 0, 255);</string>
+                           <string notr="true">QGroupBox { border: 4px solid #F57C00; border-radius: 6px; margin-top: 12px; padding-top: 8px; } QGroupBox::title { subcontrol-origin: margin; subcontrol-position: top left; padding: 0 6px; color: #F57C00; }</string>
                           </property>
                           <property name="title">
                            <string>坐标</string>
@@ -225,7 +228,7 @@
                         <item>
                          <widget class="QGroupBox" name="groupBox_6">
                           <property name="styleSheet">
-                           <string notr="true">color: rgb(0, 0, 255);</string>
+                           <string notr="true">QGroupBox { border: 4px solid #7B1FA2; border-radius: 6px; margin-top: 12px; padding-top: 8px; } QGroupBox::title { subcontrol-origin: margin; subcontrol-position: top left; padding: 0 6px; color: #7B1FA2; }</string>
                           </property>
                           <property name="title">
                            <string>针点</string>
@@ -287,7 +290,7 @@
                         <item>
                          <widget class="QGroupBox" name="groupBox_7">
                           <property name="styleSheet">
-                           <string notr="true">color: rgb(0, 0, 255);</string>
+                           <string notr="true">QGroupBox { border: 4px solid #D32F2F; border-radius: 6px; margin-top: 12px; padding-top: 8px; } QGroupBox::title { subcontrol-origin: margin; subcontrol-position: top left; padding: 0 6px; color: #D32F2F; }</string>
                           </property>
                           <property name="title">
                            <string>图号</string>
@@ -516,7 +519,7 @@
                   </font>
                  </property>
                  <property name="styleSheet">
-                  <string notr="true">color: rgb(0, 0, 255);</string>
+                  <string notr="true">QGroupBox { border: 4px solid #303F9F; border-radius: 6px; margin-top: 12px; padding-top: 8px; } QGroupBox::title { subcontrol-origin: margin; subcontrol-position: top left; padding: 0 6px; color: #303F9F; }</string>
                  </property>
                  <property name="title">
                   <string>测试图号</string>
@@ -545,7 +548,7 @@
                   </font>
                  </property>
                  <property name="styleSheet">
-                  <string notr="true">color: rgb(0, 0, 255);</string>
+                  <string notr="true">QGroupBox { border: 4px solid #C2185B; border-radius: 6px; margin-top: 12px; padding-top: 8px; } QGroupBox::title { subcontrol-origin: margin; subcontrol-position: top left; padding: 0 6px; color: #C2185B; }</string>
                  </property>
                  <property name="title">
                   <string>档案图号</string>
