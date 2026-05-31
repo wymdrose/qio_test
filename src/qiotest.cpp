@@ -158,6 +158,11 @@ QIoTest::QIoTest(QWidget *parent)
         settings.setValue("com_port", index);
     });
 
+    ui.lineEdit_userName->setText(settings.value("user_name").toString());
+    connect(ui.lineEdit_userName, &QLineEdit::editingFinished, [this]() {
+        settings.setValue("user_name", ui.lineEdit_userName->text().trimmed());
+    });
+
     connect(ui.pushButtonMoveUp, &QPushButton::clicked, [this]() {
         QModelIndexList indexes = ui.listWidgetDown->selectionModel()->selectedRows();
 
