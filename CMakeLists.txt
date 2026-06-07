@@ -99,17 +99,11 @@ add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD
     COMMAND ${CMAKE_COMMAND} -E copy_if_different
         "${CMAKE_CURRENT_SOURCE_DIR}/app.ini"
         "$<TARGET_FILE_DIR:${PROJECT_NAME}>/app.ini"
+    COMMAND ${CMAKE_COMMAND} -E copy_directory
+        "${CMAKE_CURRENT_SOURCE_DIR}/cfg"
+        "$<TARGET_FILE_DIR:${PROJECT_NAME}>/cfg"
     VERBATIM
 )
-
-if(EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/cfg")
-    add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD
-        COMMAND ${CMAKE_COMMAND} -E copy_directory
-            "${CMAKE_CURRENT_SOURCE_DIR}/cfg"
-            "$<TARGET_FILE_DIR:${PROJECT_NAME}>/cfg"
-        VERBATIM
-    )
-endif()
 
 # Install rules
 install(TARGETS ${PROJECT_NAME}

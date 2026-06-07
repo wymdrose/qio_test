@@ -1,0 +1,45 @@
+{
+  "version": 6,
+  "cmakeMinimumRequired": {
+    "major": 3,
+    "minor": 16,
+    "patch": 0
+  },
+  "configurePresets": [
+    {
+      "name": "windows-vcpkg",
+      "displayName": "Windows (vcpkg, Ninja)",
+      "generator": "Ninja Multi-Config",
+      "binaryDir": "${sourceDir}/build",
+      "environment": {
+        "VCPKG_ROOT": "D:/vcpkg",
+        "PATH": "D:/vcpkg/downloads/tools/ninja-1.13.2-windows;C:/Program Files (x86)/Microsoft Visual Studio/2022/BuildTools/VC/Tools/MSVC/14.44.35207/bin/Hostx64/x64;$penv{PATH}",
+        "INCLUDE": "C:/Program Files (x86)/Microsoft Visual Studio/2022/BuildTools/VC/Tools/MSVC/14.44.35207/include;C:/Program Files (x86)/Microsoft Visual Studio/2022/BuildTools/VC/Auxiliary/VS/include;C:/Program Files (x86)/Windows Kits/10/include/10.0.26100.0/ucrt;C:/Program Files (x86)/Windows Kits/10/include/10.0.26100.0/um;C:/Program Files (x86)/Windows Kits/10/include/10.0.26100.0/shared;C:/Program Files (x86)/Windows Kits/10/include/10.0.26100.0/winrt;C:/Program Files (x86)/Windows Kits/10/include/10.0.26100.0/cppwinrt",
+        "LIB": "C:/Program Files (x86)/Microsoft Visual Studio/2022/BuildTools/VC/Tools/MSVC/14.44.35207/lib/x64;C:/Program Files (x86)/Windows Kits/10/lib/10.0.26100.0/ucrt/x64;C:/Program Files (x86)/Windows Kits/10/lib/10.0.26100.0/um/x64",
+        "LIBPATH": "C:/Program Files (x86)/Microsoft Visual Studio/2022/BuildTools/VC/Tools/MSVC/14.44.35207/lib/x64;C:/Program Files (x86)/Windows Kits/10/UnionMetadata/10.0.26100.0;C:/Program Files (x86)/Windows Kits/10/References/10.0.26100.0;C:/Windows/Microsoft.NET/Framework64/v4.0.30319"
+      },
+      "cacheVariables": {
+        "CMAKE_C_COMPILER": "cl",
+        "CMAKE_CXX_COMPILER": "cl",
+        "CMAKE_TOOLCHAIN_FILE": {
+          "type": "FILEPATH",
+          "value": "D:/vcpkg/scripts/buildsystems/vcpkg.cmake"
+        }
+      }
+    }
+  ],
+  "buildPresets": [
+    {
+      "name": "debug",
+      "displayName": "Debug",
+      "configurePreset": "windows-vcpkg",
+      "configuration": "Debug"
+    },
+    {
+      "name": "release",
+      "displayName": "Release",
+      "configurePreset": "windows-vcpkg",
+      "configuration": "Release"
+    }
+  ]
+}
