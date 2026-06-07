@@ -24,7 +24,8 @@
         "CMAKE_TOOLCHAIN_FILE": {
           "type": "FILEPATH",
           "value": "D:/vcpkg/scripts/buildsystems/vcpkg.cmake"
-        }
+        },
+        "X_VCPKG_APPLOCAL_DEPS_INSTALL": "ON"
       }
     }
   ],

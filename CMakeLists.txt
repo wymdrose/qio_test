@@ -105,10 +105,67 @@ add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD
     VERBATIM
 )
 
-# Install rules
+# Install rules (Windows: use bin/ so CPack NSIS shortcuts point to the right path)
+if(WIN32)
+    set(_install_runtime_dest "bin")
+else()
+    set(_install_runtime_dest "${CMAKE_INSTALL_BINDIR}")
+endif()
+
 install(TARGETS ${PROJECT_NAME}
     BUNDLE DESTINATION .
     LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
-    RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
+    RUNTIME DESTINATION ${_install_runtime_dest}
 )
+
+install(FILES "${CMAKE_CURRENT_SOURCE_DIR}/app.ini" DESTINATION bin)
+install(DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/cfg/"
+    DESTINATION bin/cfg
+    FILES_MATCHING
+    PATTERN "*"
+)
+
+if(WIN32)
+    get_target_property(_qt_core_location Qt5::Core IMPORTED_LOCATION_RELEASE)
+    if(NOT _qt_core_location)
+        get_target_property(_qt_core_location Qt5::Core IMPORTED_LOCATION)
+    endif()
+    if(_qt_core_location)
+        get_filename_component(_qt_bin_dir "${_qt_core_location}" DIRECTORY)
+    endif()
+    find_program(WINDEPLOYQT_EXECUTABLE
+        NAMES windeployqt
+        HINTS
+            "${_qt_bin_dir}"
+            "${_qt_bin_dir}/../tools/qt5/bin"
+            "$ENV{VCPKG_ROOT}/installed/x64-windows/tools/qt5/bin"
+    )
+
+    if(WINDEPLOYQT_EXECUTABLE)
+        install(CODE "
+            set(_exe \"\${CMAKE_INSTALL_PREFIX}/bin/${PROJECT_NAME}.exe\")
+            if(NOT EXISTS \"\${_exe}\")
+                message(FATAL_ERROR \"Expected executable not found: \${_exe}\")
+            endif()
+            execute_process(
+                COMMAND \"${WINDEPLOYQT_EXECUTABLE}\"
+                    --no-translations
+                    --no-angle
+                    --dir \"\${CMAKE_INSTALL_PREFIX}/bin\"
+                    \"\${_exe}\"
+                RESULT_VARIABLE _deploy_result
+                OUTPUT_VARIABLE _deploy_output
+                ERROR_VARIABLE _deploy_error
+            )
+            if(NOT _deploy_result EQUAL 0)
+                message(FATAL_ERROR \"windeployqt failed: \${_deploy_output}\${_deploy_error}\")
+            endif()
+        ")
+    else()
+        message(WARNING "windeployqt not found; installer will not bundle Qt runtime DLLs")
+    endif()
+endif()
+
+include(${CMAKE_CURRENT_SOURCE_DIR}/cmake/CPackConfig.cmake)
+include(CPack)
 

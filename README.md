@@ -44,6 +44,29 @@ cmake -DCMAKE_TOOLCHAIN_FILE="C:/path/to/vcpkg/scripts/buildsystems/vcpkg.cmake"
 cmake --build . --config Release
 ```
 
+### Windows installer (Release EXE)
+
+Build a self-contained NSIS installer that bundles Qt runtime, config files, and the app:
+
+1. Install [NSIS](https://nsis.sourceforge.io/) (once): `winget install NSIS.NSIS`
+2. From the project root:
+
+```bat
+configure.bat
+build_installer.bat
+```
+
+Output: `build\QIoTest-<version>-win64.exe`
+
+The installer creates Start Menu and desktop shortcuts and registers an uninstaller in Windows Settings.
+
+To deploy Qt DLLs next to the exe without building an installer (for local testing):
+
+```bat
+build_release.bat
+scripts\deploy_release.cmd
+```
+
 ## Project Structure
 
 ```
