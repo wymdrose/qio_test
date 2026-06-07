@@ -16,6 +16,10 @@
 #include "mysqlite.h"
 #include "dologs.h"
 
+#ifndef QIOTEST_VERSION
+#define QIOTEST_VERSION "unknown"
+#endif
+
 // Global declarations
 extern Ui::QIoTestClass* gpUi;
 extern QString gExePath;

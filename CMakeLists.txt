@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.16)
 
-project(QIoTest VERSION 3.0.12 LANGUAGES CXX)
+project(QIoTest VERSION 4.0.9 LANGUAGES CXX)
 
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
@@ -84,7 +84,10 @@ target_link_libraries(${PROJECT_NAME} PRIVATE
 
 # Link QXlsx
 target_link_libraries(${PROJECT_NAME} PRIVATE QXlsx::QXlsx)
-target_compile_definitions(${PROJECT_NAME} PRIVATE HAVE_QXLSX)
+target_compile_definitions(${PROJECT_NAME} PRIVATE
+    HAVE_QXLSX
+    QIOTEST_VERSION="${PROJECT_VERSION}"
+)
 
 # Windows-specific settings
 if(WIN32)
@@ -141,7 +144,59 @@ if(WIN32)
             "$ENV{VCPKG_ROOT}/installed/x64-windows/tools/qt5/bin"
     )
 
+    set(_vcpkg_installed_bin "")
+    if(DEFINED ENV{VCPKG_ROOT} AND EXISTS "$ENV{VCPKG_ROOT}/installed/x64-windows/bin")
+        set(_vcpkg_installed_bin "$ENV{VCPKG_ROOT}/installed/x64-windows/bin")
+    elseif(DEFINED VCPKG_INSTALLED_DIR AND EXISTS "${VCPKG_INSTALLED_DIR}/x64-windows/bin")
+        set(_vcpkg_installed_bin "${VCPKG_INSTALLED_DIR}/x64-windows/bin")
+    elseif(EXISTS "${CMAKE_CURRENT_BINARY_DIR}/vcpkg_installed/x64-windows/bin")
+        set(_vcpkg_installed_bin "${CMAKE_CURRENT_BINARY_DIR}/vcpkg_installed/x64-windows/bin")
+    endif()
+
+    set(_vcpkg_applocal_ps1 "")
+    if(CMAKE_TOOLCHAIN_FILE MATCHES "vcpkg\\.cmake$")
+        get_filename_component(_vcpkg_toolchain_dir "${CMAKE_TOOLCHAIN_FILE}" DIRECTORY)
+        set(_vcpkg_applocal_ps1 "${_vcpkg_toolchain_dir}/msbuild/applocal.ps1")
+    endif()
+
+    find_program(_VCPKG_POWERSHELL powershell.exe)
+
     if(WINDEPLOYQT_EXECUTABLE)
+        set(_install_applocal_code "")
+        if(_vcpkg_installed_bin AND _vcpkg_applocal_ps1 AND _VCPKG_POWERSHELL)
+            set(_install_applocal_code "
+            execute_process(
+                COMMAND \"${_VCPKG_POWERSHELL}\" -noprofile -executionpolicy Bypass
+                    -file \"${_vcpkg_applocal_ps1}\"
+                    -targetBinary \"\${_exe}\"
+                    -installedDir \"${_vcpkg_installed_bin}\"
+                RESULT_VARIABLE _applocal_result
+                OUTPUT_VARIABLE _applocal_output
+                ERROR_VARIABLE _applocal_error
+            )
+            if(NOT _applocal_result EQUAL 0)
+                message(FATAL_ERROR \"applocal.ps1 failed: \${_applocal_output}\${_applocal_error}\")
+            endif()
+            set(_sqlite_plugin \"\${CMAKE_INSTALL_PREFIX}/bin/sqldrivers/qsqlite.dll\")
+            if(EXISTS \"\${_sqlite_plugin}\")
+                execute_process(
+                    COMMAND \"${_VCPKG_POWERSHELL}\" -noprofile -executionpolicy Bypass
+                        -file \"${_vcpkg_applocal_ps1}\"
+                        -targetBinary \"\${_sqlite_plugin}\"
+                        -installedDir \"${_vcpkg_installed_bin}\"
+                    RESULT_VARIABLE _applocal_sqlite_result
+                    OUTPUT_VARIABLE _applocal_sqlite_output
+                    ERROR_VARIABLE _applocal_sqlite_error
+                )
+                if(NOT _applocal_sqlite_result EQUAL 0)
+                    message(FATAL_ERROR \"applocal.ps1 failed for qsqlite: \${_applocal_sqlite_output}\${_applocal_sqlite_error}\")
+                endif()
+            endif()
+            ")
+        else()
+            message(WARNING "vcpkg applocal not configured; installer may miss runtime DLLs")
+        endif()
+
         install(CODE "
             set(_exe \"\${CMAKE_INSTALL_PREFIX}/bin/${PROJECT_NAME}.exe\")
             if(NOT EXISTS \"\${_exe}\")
@@ -160,6 +215,7 @@ if(WIN32)
             if(NOT _deploy_result EQUAL 0)
                 message(FATAL_ERROR \"windeployqt failed: \${_deploy_output}\${_deploy_error}\")
             endif()
+            ${_install_applocal_code}
         ")
     else()
         message(WARNING "windeployqt not found; installer will not bundle Qt runtime DLLs")
