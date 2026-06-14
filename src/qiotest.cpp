@@ -138,7 +138,7 @@ QIoTest::QIoTest(QWidget *parent)
     // Load mapping table (duizhao)
     try
     {
-#ifdef HAVE_QXLSX
+#ifdef HAVE_XLNT
         const auto mappingPath = gExePath + "/cfg/duizhao.xlsx";
         if (QFileInfo::exists(mappingPath)) {
             FileIo::XlsxFile file;
@@ -147,7 +147,7 @@ QIoTest::QIoTest(QWidget *parent)
             qDebug() << "Mapping file missing:" << mappingPath;
         }
 #else
-        qDebug() << "QXlsx not available, skipping Excel file load";
+        qDebug() << "xlnt not available, skipping Excel file load";
 #endif
     }
     catch (...)
@@ -222,14 +222,16 @@ QIoTest::QIoTest(QWidget *parent)
     });
 
     connect(ui.pushButton_input, &QPushButton::clicked, [this]() {
+        inputFile_ = ui.lineEdit_input->text().trimmed();
         QFileInfo fileInfo(inputFile_);
         if (!fileInfo.exists()) {
-            QMessageBox::information(this, "", QStringLiteral("选择图号错误!"));
-            qDebug() << "Input file error: " << inputFile_;
+            QMessageBox::warning(this, QStringLiteral("导入失败"),
+                QStringLiteral("文件不存在：\n%1").arg(inputFile_));
+            qDebug() << "Input file error:" << inputFile_;
             return;
         }
 
-#ifdef HAVE_QXLSX
+#ifdef HAVE_XLNT
         // Read input
         QStringList input_list;
         try
@@ -237,9 +239,18 @@ QIoTest::QIoTest(QWidget *parent)
             FileIo::XlsxFile file;
             file.readExcel(inputFile_, 2, input_list);
         }
+        catch (const std::exception &e)
+        {
+            qDebug() << "input.readExcel failed:" << e.what();
+            QMessageBox::warning(this, QStringLiteral("导入失败"),
+                QStringLiteral("无法读取 Excel 文件：%1").arg(QString::fromUtf8(e.what())));
+            return;
+        }
         catch (...)
         {
             qDebug() << "input.readExcel failed...";
+            QMessageBox::warning(this, QStringLiteral("导入失败"),
+                QStringLiteral("无法读取 Excel 文件。"));
             return;
         }
 
@@ -262,6 +273,9 @@ QIoTest::QIoTest(QWidget *parent)
         {
             for (size_t i = 0; i < num_line_map_.size(); i++)
             {
+                if (num_line_map_[i].size() < 2)
+                    continue;
+
                 if (item == num_line_map_[i][0])
                 {
                     item = num_line_map_[i][1];
@@ -314,23 +328,34 @@ QIoTest::QIoTest(QWidget *parent)
     });
 
     connect(ui.pushButton_load, &QPushButton::clicked, [this]() {
+        mFilePath = ui.lineEdit_path->text().trimmed();
         QFileInfo fileInfo(mFilePath);
         if (!fileInfo.exists()) {
-            QMessageBox::information(this, "", QStringLiteral("文件路径错误!"));
-            qDebug() << "File exists error: " << mFilePath;
+            QMessageBox::warning(this, QStringLiteral("加载失败"),
+                QStringLiteral("文件不存在：\n%1").arg(mFilePath));
+            qDebug() << "File exists error:" << mFilePath;
             return;
         }
 
-#ifdef HAVE_QXLSX
+#ifdef HAVE_XLNT
         // Read Excel
         try
         {
             FileIo::XlsxFile file;
             file.readExcel(mFilePath, ui.tableWidget);
         }
+        catch (const std::exception &e)
+        {
+            qDebug() << "Read io failed:" << e.what();
+            QMessageBox::warning(this, QStringLiteral("加载失败"),
+                QStringLiteral("无法读取 Excel 文件：%1").arg(QString::fromUtf8(e.what())));
+            return;
+        }
         catch (...)
         {
             qDebug() << "Read io failed...";
+            QMessageBox::warning(this, QStringLiteral("加载失败"),
+                QStringLiteral("无法读取 Excel 文件。"));
             return;
         }
 #endif
@@ -378,7 +403,7 @@ QIoTest::QIoTest(QWidget *parent)
 
     ui.pushButtonSave->setEnabled(false);
     connect(ui.pushButtonSave, &QPushButton::clicked, [this]() {
-#ifdef HAVE_QXLSX
+#ifdef HAVE_XLNT
         FileIo::XlsxFile file;
         file.writeExcel(mFilePath, ui.tableWidget);
 #endif

@@ -25,6 +25,7 @@
           "type": "FILEPATH",
           "value": "D:/vcpkg/scripts/buildsystems/vcpkg.cmake"
         },
+        "VCPKG_INSTALLED_DIR": "D:/vcpkg/installed",
         "X_VCPKG_APPLOCAL_DEPS_INSTALL": "ON"
       }
     }

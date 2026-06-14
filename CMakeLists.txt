@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.16)
 
-project(QIoTest VERSION 4.0.9 LANGUAGES CXX)
+project(QIoTest VERSION 4.0.10 LANGUAGES CXX)
 
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
@@ -25,15 +25,16 @@ find_package(Qt5 REQUIRED COMPONENTS
     Multimedia
 )
 
-# QXlsx - included as subdirectory
-set(QT_VERSION_MAJOR 5)
-add_subdirectory(third_party/QXlsx/QXlsx)
+# xlnt - Excel file library (via vcpkg or system install)
+find_package(Xlnt REQUIRED)
+find_package(libzip CONFIG REQUIRED)
 
 # Source files
 set(SOURCES
     src/main.cpp
     src/qiotest.cpp
     src/testprocess.cpp
+    src/xlsx_load.cpp
 )
 
 # Header files
@@ -42,6 +43,7 @@ set(HEADERS
     src/global.h
     include/communicatelib.h
     include/xlsxfile.h
+    include/xlsx_load.h
     include/mysignal.h
     include/mysqlite.h
     include/dologs.h
@@ -82,10 +84,10 @@ target_link_libraries(${PROJECT_NAME} PRIVATE
     Qt5::Multimedia
 )
 
-# Link QXlsx
-target_link_libraries(${PROJECT_NAME} PRIVATE QXlsx::QXlsx)
+# Link xlnt
+target_link_libraries(${PROJECT_NAME} PRIVATE xlnt::xlnt libzip::zip)
 target_compile_definitions(${PROJECT_NAME} PRIVATE
-    HAVE_QXLSX
+    HAVE_XLNT
     QIOTEST_VERSION="${PROJECT_VERSION}"
 )
 
@@ -99,9 +101,10 @@ endif()
 
 # Copy runtime files next to the executable (multi-config safe)
 add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD
-    COMMAND ${CMAKE_COMMAND} -E copy_if_different
-        "${CMAKE_CURRENT_SOURCE_DIR}/app.ini"
-        "$<TARGET_FILE_DIR:${PROJECT_NAME}>/app.ini"
+    COMMAND ${CMAKE_COMMAND}
+        -DSRC=${CMAKE_CURRENT_SOURCE_DIR}/app.ini
+        -DDST=$<TARGET_FILE_DIR:${PROJECT_NAME}>/app.ini
+        -P ${CMAKE_CURRENT_SOURCE_DIR}/cmake/copy_if_missing.cmake
     COMMAND ${CMAKE_COMMAND} -E copy_directory
         "${CMAKE_CURRENT_SOURCE_DIR}/cfg"
         "$<TARGET_FILE_DIR:${PROJECT_NAME}>/cfg"
@@ -136,13 +139,24 @@ if(WIN32)
     if(_qt_core_location)
         get_filename_component(_qt_bin_dir "${_qt_core_location}" DIRECTORY)
     endif()
-    find_program(WINDEPLOYQT_EXECUTABLE
-        NAMES windeployqt
-        HINTS
-            "${_qt_bin_dir}"
-            "${_qt_bin_dir}/../tools/qt5/bin"
-            "$ENV{VCPKG_ROOT}/installed/x64-windows/tools/qt5/bin"
-    )
+    set(_qt5_windeployqt_hints "")
+    if(_qt_bin_dir)
+        list(APPEND _qt5_windeployqt_hints "${_qt_bin_dir}/../tools/qt5/bin")
+    endif()
+    if(DEFINED ENV{VCPKG_ROOT})
+        list(APPEND _qt5_windeployqt_hints "$ENV{VCPKG_ROOT}/installed/x64-windows/tools/qt5/bin")
+    endif()
+    if(DEFINED VCPKG_INSTALLED_DIR)
+        list(APPEND _qt5_windeployqt_hints "${VCPKG_INSTALLED_DIR}/x64-windows/tools/qt5/bin")
+    endif()
+    unset(WINDEPLOYQT_EXECUTABLE CACHE)
+    set(WINDEPLOYQT_EXECUTABLE "")
+    foreach(_hint IN LISTS _qt5_windeployqt_hints)
+        if(EXISTS "${_hint}/windeployqt.exe")
+            set(WINDEPLOYQT_EXECUTABLE "${_hint}/windeployqt.exe")
+            break()
+        endif()
+    endforeach()
 
     set(_vcpkg_installed_bin "")
     if(DEFINED ENV{VCPKG_ROOT} AND EXISTS "$ENV{VCPKG_ROOT}/installed/x64-windows/bin")

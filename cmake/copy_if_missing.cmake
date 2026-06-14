@@ -1,0 +1,5 @@
+get_filename_component(_dst_name "${DST}" NAME)
+get_filename_component(_dst_dir "${DST}" DIRECTORY)
+if(NOT EXISTS "${DST}")
+    file(COPY "${SRC}" DESTINATION "${_dst_dir}")
+endif()

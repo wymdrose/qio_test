@@ -5,7 +5,7 @@ A Qt-based IO testing application for conductivity detection, featuring serial p
 ## Features
 
 - Serial port communication for hardware testing
-- Excel file reading/writing (requires QXlsx library)
+- Excel file reading/writing (via xlnt library)
 - SQLite database for data storage
 - Test result tracking with OK/NG status
 - Coordinate and pin point searching
@@ -16,7 +16,7 @@ A Qt-based IO testing application for conductivity detection, featuring serial p
 - Qt 5.15 (or compatible 5.x), e.g. via vcpkg (`qt5-base`, `qt5-serialport`, `qt5-multimedia`)
 - CMake 3.16 or later
 - C++17 compatible compiler
-- QXlsx is vendored under `third_party/QXlsx`
+- xlnt (via vcpkg)
 
 ### Required Qt5 modules
 
@@ -102,26 +102,15 @@ The application uses an `app.ini` file to store settings:
 - `file_path`: Last opened test file path
 - `input_path`: Last opened input file path
 
-## Optional: Installing QXlsx
+## Excel support (xlnt)
 
-To enable Excel file support, install QXlsx:
+Excel read/write is provided by [xlnt](https://github.com/xlnt-community/xlnt), installed through vcpkg (`xlnt` in `vcpkg.json`). Install into the global vcpkg tree (`D:\vcpkg\installed`) with:
 
-```bash
-# Clone QXlsx
-git clone https://github.com/QtExcel/QXlsx.git
-
-# Build and install
-cd QXlsx
-mkdir build && cd build
-cmake -DCMAKE_PREFIX_PATH="C:/Qt/5.15.2/msvc2019_64" ..
-cmake --build . --config Release
-cmake --install . --prefix "C:/QXlsx"
+```bat
+D:\vcpkg\vcpkg.exe install xlnt:x64-windows --classic
 ```
 
-Then add to your CMake configure command:
-```bash
-cmake -DCMAKE_PREFIX_PATH="C:/Qt/5.15.2/msvc2019_64;C:/QXlsx" ..
-```
+Then re-run `configure.bat`.
 
 ## License
 
