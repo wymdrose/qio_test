@@ -1,0 +1,6 @@
+cmake_minimum_required(VERSION 3.16)
+project(xlnt_test LANGUAGES CXX)
+set(CMAKE_CXX_STANDARD 17)
+find_package(Xlnt REQUIRED)
+add_executable(xlnt_test main.cpp)
+target_link_libraries(xlnt_test PRIVATE xlnt::xlnt)
