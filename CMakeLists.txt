@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.16)
 
-project(QIoTest VERSION 4.0.11 LANGUAGES CXX)
+project(QIoTest VERSION 4.0.12 LANGUAGES CXX)
 
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
@@ -108,6 +108,9 @@ add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD
     COMMAND ${CMAKE_COMMAND} -E copy_directory
         "${CMAKE_CURRENT_SOURCE_DIR}/cfg"
         "$<TARGET_FILE_DIR:${PROJECT_NAME}>/cfg"
+    COMMAND ${CMAKE_COMMAND} -E copy
+        "${CMAKE_CURRENT_SOURCE_DIR}/resources/find.wav"
+        "$<TARGET_FILE_DIR:${PROJECT_NAME}>/find.wav"
     VERBATIM
 )
 
@@ -125,6 +128,7 @@ install(TARGETS ${PROJECT_NAME}
 )
 
 install(FILES "${CMAKE_CURRENT_SOURCE_DIR}/app.ini" DESTINATION bin)
+install(FILES "${CMAKE_CURRENT_SOURCE_DIR}/resources/find.wav" DESTINATION bin)
 install(DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/cfg/"
     DESTINATION bin/cfg
     FILES_MATCHING
